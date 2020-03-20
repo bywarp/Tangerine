@@ -1,0 +1,8 @@
+name: Tangerine
+main: co.bywarp.tangerine.Tangerine
+website: www.bywarp.co/tangerine
+description: A sweet framework for building minecraft hub plugins.
+version: 0.1
+author: Warp
+depend: [Melon]
+loadbefore: [Melon]
