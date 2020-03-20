@@ -43,7 +43,7 @@ public class StaffBoard extends HubScoreboard {
         li.add(Lang.colorMessage(String.format("%sWebsite: %s%s", leads, sec, "www.mci.gg")));
         li.add(Lang.colorMessage(String.format("%sPlayers: %s%s/%s", leads, sec, ClientManager.getOnlinePlayers().size(), Bukkit.getMaxPlayers())));
         li.add(Lang.colorMessage("&d"));
-        li.add(Lang.colorMessage("&fCookies: &aLoading.."));
+        li.add(Lang.colorMessage("&fCoins: &aLoading.."));
         li.add(Lang.colorMessage(String.format("%sServer: %s%s", leads, sec, serverName)));
         li.add(Lang.colorMessage(String.format("%sRank: Loading..", leads)));
         li.add(Lang.colorMessage("&e&r" + divider + "&m----------------------"));
@@ -65,7 +65,7 @@ public class StaffBoard extends HubScoreboard {
         ChatStatusModule chatStatus = Tangerine.getChatStatus();
 
         manager.set(2, leads + "Players: " + sec + ClientManager.getOnlinePlayers().size() + "/" + Bukkit.getMaxPlayers());
-        manager.set(4, leads + "Cookies: " + sec + NumberFormat.getInstance(Locale.US).format(client.getCookies()));
+        manager.set(4, leads + "Coins: " + sec + NumberFormat.getInstance(Locale.US).format(client.getCoins()));
         manager.set(6, leads + "Rank: " + Lang.cond(client.getRank() == Rank.MEMBER, "&7Member", client.getRank().getCompatPrefix()));
         manager.set(8, leads + "Vanish: " + sec + Lang.cond(vanishModule.isVanished(client), "&aOn", "&cOff"));
         manager.set(9, leads + "Chat: " + sec + getChatStatus(chatStatus));
