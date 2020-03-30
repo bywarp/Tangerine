@@ -9,7 +9,8 @@
 
 package co.bywarp.tangerine;
 
-import co.bywarp.melon.command.system.CommandHandler;
+import co.bywarp.melon.bean.repository.ServerRepository;
+import co.bywarp.melon.command.CommandHandler;
 import co.bywarp.melon.event.MelonPluginInitializationEvent;
 import co.bywarp.melon.module.ModuleManager;
 import co.bywarp.melon.module.defaults.DefaultModules;
@@ -22,10 +23,14 @@ import co.bywarp.tangerine.commands.EditCommand;
 import co.bywarp.tangerine.modules.AntiWeatherModule;
 import co.bywarp.tangerine.modules.player.PlayerEditModule;
 import co.bywarp.tangerine.modules.player.PlayerHotbarModule;
+import co.bywarp.tangerine.modules.player.PlayerJumpModule;
 import co.bywarp.tangerine.modules.player.PlayerPostJoinModule;
 import co.bywarp.tangerine.modules.player.PlayerStateModule;
 import co.bywarp.tangerine.npcs.DailyRewardNPC;
+import co.bywarp.tangerine.npcs.EventNPC;
+import co.bywarp.tangerine.npcs.games.BingoNPC;
 import co.bywarp.tangerine.npcs.games.CannonsNPC;
+import co.bywarp.tangerine.npcs.games.DeathRunNPC;
 import co.bywarp.tangerine.npcs.games.InfectedNPC;
 import co.bywarp.tangerine.npcs.TutorialNPC;
 import co.bywarp.tangerine.scoreboard.HubScoreboardManager;
@@ -69,10 +74,15 @@ public class Tangerine extends MelonPlugin {
         vanishModule = (VanishModule) getModuleManager().getModule(VanishModule.class);
         chatStatus = (ChatStatusModule) getModuleManager().getModule(ChatStatusModule.class);
 
+        ServerRepository serverRepository = this.getBeans().getServerRepository();
         NpcManager npc = this.getNpcManager();
+
         npc.registerNPC(new DailyRewardNPC(this));
-        npc.registerNPC(new InfectedNPC(this, this.getBeans().getServerRepository()));
-        npc.registerNPC(new CannonsNPC(this, this.getBeans().getServerRepository()));
+        npc.registerNPC(new EventNPC(this));
+        npc.registerNPC(new BingoNPC(this, serverRepository));
+        npc.registerNPC(new DeathRunNPC(this, serverRepository));
+        npc.registerNPC(new InfectedNPC(this, serverRepository));
+        npc.registerNPC(new CannonsNPC(this, serverRepository));
         npc.registerNPC(new TutorialNPC());
 
         ModuleManager modules = this.getModuleManager();
@@ -81,6 +91,7 @@ public class Tangerine extends MelonPlugin {
         modules.load(new AntiWeatherModule());
         modules.load(editModule = new PlayerEditModule());
         modules.load(new PlayerHotbarModule(this.getClientManager(), editModule));
+        modules.load(new PlayerJumpModule());
         modules.load(new PlayerPostJoinModule());
         modules.load(new PlayerStateModule());
 

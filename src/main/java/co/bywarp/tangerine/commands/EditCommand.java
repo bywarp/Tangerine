@@ -9,8 +9,8 @@
 
 package co.bywarp.tangerine.commands;
 
-import co.bywarp.melon.command.system.Command;
-import co.bywarp.melon.command.system.CommandReturn;
+import co.bywarp.melon.command.Command;
+import co.bywarp.melon.command.CommandReturn;
 import co.bywarp.melon.player.Client;
 import co.bywarp.melon.player.Rank;
 import co.bywarp.melon.util.text.Lang;

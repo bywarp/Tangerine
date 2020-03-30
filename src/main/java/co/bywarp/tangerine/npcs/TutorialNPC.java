@@ -11,21 +11,18 @@ package co.bywarp.tangerine.npcs;
 
 import co.bywarp.melon.npc.Npc;
 import co.bywarp.melon.player.Client;
-import co.bywarp.melon.util.item.ItemBuilder;
 import co.bywarp.melon.util.text.Lang;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.PigZombie;
+import org.bukkit.entity.Villager;
 
-public class TutorialNPC extends Npc<PigZombie> {
+public class TutorialNPC extends Npc<Villager> {
 
     public TutorialNPC() {
         super(
                 new Location(Bukkit.getWorld("Hub"), -15.5, 59, -87.5, -90f, 3.5f),
-                PigZombie.class,
+                Villager.class,
                 "&2&lTutorials",
                 " ",
                 "&aTutorials &fare coming soon,",
@@ -37,14 +34,14 @@ public class TutorialNPC extends Npc<PigZombie> {
     public void spawn() {
         super.spawn();
 
-        PigZombie zombie = (PigZombie) getEntity();
-        zombie.setAngry(false);
-        zombie.getEquipment().setItemInHand(
-                new ItemBuilder(Material.DIAMOND_HOE)
-                .addEnchantment(Enchantment.DIG_SPEED, 10)
-                .toItemStack()
-        );
-        zombie.getEquipment().setLeggings(new ItemBuilder(Material.GOLD_LEGGINGS).toItemStack());
+        Villager villager = (Villager) getEntity();
+        villager.setProfession(Villager.Profession.PRIEST);
+//        villager.getEquipment().setItemInHand(
+//                new ItemBuilder(Material.DIAMOND_HOE)
+//                .addEnchantment(Enchantment.DIG_SPEED, 10)
+//                .toItemStack()
+//        );
+//        villager.getEquipment().setLeggings(new ItemBuilder(Material.GOLD_LEGGINGS).toItemStack());
     }
 
     @Override

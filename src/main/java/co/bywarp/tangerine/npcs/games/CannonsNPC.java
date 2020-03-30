@@ -78,7 +78,7 @@ public class CannonsNPC extends Npc<Skeleton> {
 
     @Override
     public void interact(Client client) {
-        GameServerSelector.serve(plugin, client, SelectorGameType.INFECTED);
+        GameServerSelector.serve(plugin, client, SelectorGameType.CANNONS);
     }
 
 }

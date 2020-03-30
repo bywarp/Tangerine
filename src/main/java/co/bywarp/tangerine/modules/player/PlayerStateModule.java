@@ -24,15 +24,15 @@ import org.bukkit.event.player.PlayerMoveEvent;
 
 public class PlayerStateModule extends Module {
 
-//    private Cuboid region;
-//    private final World HUB_WORLD = Bukkit.getWorld("Hub");
+    private Cuboid region;
+    private final World HUB_WORLD = Bukkit.getWorld("Hub");
 
     public PlayerStateModule() {
         super("Player State");
-//        this.region = new Cuboid(
-//                new Location(HUB_WORLD, -166.5, 161.5, 146.5),
-//                new Location(HUB_WORLD, 158.5, 4, -184.5)
-//        );
+        this.region = new Cuboid(
+                new Location(HUB_WORLD, -174.5, 150, 45),
+                new Location(HUB_WORLD, 123.5, 30, -238.5)
+        );
     }
 
     @Override
@@ -57,11 +57,11 @@ public class PlayerStateModule extends Module {
         event.setFoodLevel(20);
     }
 
-//    @EventHandler
-//    public void onMove(PlayerMoveEvent event) {
-//        if (!region.contains(event.getTo())) {
-//            event.setTo(Tangerine.getGlobalSpawn());
-//        }
-//    }
+    @EventHandler
+    public void onMove(PlayerMoveEvent event) {
+        if (!region.contains(event.getTo())) {
+            event.setTo(Tangerine.getGlobalSpawn());
+        }
+    }
 
 }
