@@ -46,9 +46,10 @@ public class InfectedNPC extends Npc<Zombie> {
             @Override
             public void run() {
                 Hologram hologram = getHologram();
-//                hologram.update(2, "&a");
-
+                int players = repository.getPlayers("Infected");
                 int servers = repository.getServers("Infected").size();
+
+                hologram.update(2, "&e" + players + " &fcurrently playing");
                 hologram.update(3, "&e" + servers + " &fgame server" + TimeUtil.numberEnding(servers));
             }
         }.runTaskTimer(plugin, 0L, 20L * 5L);

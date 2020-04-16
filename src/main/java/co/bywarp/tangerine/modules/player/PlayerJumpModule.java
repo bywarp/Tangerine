@@ -12,6 +12,7 @@ package co.bywarp.tangerine.modules.player;
 import co.bywarp.melon.module.Module;
 import co.bywarp.melon.player.Client;
 import co.bywarp.melon.player.ClientManager;
+import co.bywarp.melon.player.statistics.data.StatisticNode;
 import co.bywarp.melon.util.player.SoundUtil;
 
 import org.bukkit.GameMode;
@@ -42,7 +43,7 @@ public class PlayerJumpModule extends Module {
     public void onFly(PlayerToggleFlightEvent event) {
         Player player = event.getPlayer();
         Client client = ClientManager.getPlayer(player.getUniqueId());
-        if (client.isFly()) {
+        if (!canJump(client)) {
             return;
         }
 
@@ -54,7 +55,18 @@ public class PlayerJumpModule extends Module {
             player.setAllowFlight(false);
             player.setFlying(false);
             player.setVelocity(player.getLocation().getDirection().clone().multiply(1.5));
-            SoundUtil.play(client, Sound.ENDERDRAGON_WINGS, 1, 0.5f);
+
+            StatisticNode node = client
+                    .getStatisticsManager()
+                    .getNodeTree()
+                    .get("Player")
+                    .getNode("Prefs")
+                    .getNode("User");
+
+            if (node.getBoolean("JumpSound")) {
+                SoundUtil.play(client, Sound.ENDERDRAGON_WINGS, 1, 0.5f);
+            }
+
             return;
         }
 
@@ -65,6 +77,11 @@ public class PlayerJumpModule extends Module {
     public void onMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
         Client client = ClientManager.getPlayer(player.getUniqueId());
+
+        if (!canJump(client)) {
+            return;
+        }
+
         if (client.isFly()) {
             player.setAllowFlight(true);
             return;

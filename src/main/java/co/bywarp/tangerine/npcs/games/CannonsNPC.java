@@ -48,9 +48,10 @@ public class CannonsNPC extends Npc<Skeleton> {
             @Override
             public void run() {
                 Hologram hologram = getHologram();
-//                hologram.update(2, "&a");
-
+                int players = repository.getPlayers("Cannons");
                 int servers = repository.getServers("Cannons").size();
+
+                hologram.update(2, "&e" + players + " &fcurrently playing");
                 hologram.update(3, "&e" + servers + " &fgame server" + TimeUtil.numberEnding(servers));
             }
         }.runTaskTimer(plugin, 0L, 20L * 5L);

@@ -49,9 +49,10 @@ public class BingoNPC extends Npc<Skeleton> {
             @Override
             public void run() {
                 Hologram hologram = getHologram();
-//                hologram.update(2, "&a");
+                int players = repository.getPlayers("Bingo");
+                int servers = repository.getServers("Bingo").size();
 
-                int servers = repository.getServers("DeathRun").size();
+                hologram.update(2, "&e" + players + " &fcurrently playing");
                 hologram.update(3, "&e" + servers + " &fgame server" + TimeUtil.numberEnding(servers));
             }
         }.runTaskTimer(plugin, 0L, 20L * 5L);

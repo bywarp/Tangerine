@@ -10,11 +10,11 @@
 package co.bywarp.tangerine.modules.player;
 
 import co.bywarp.melon.module.Module;
-import co.bywarp.melon.network.GameServerSelector;
 import co.bywarp.melon.network.LobbyServerSelector;
-import co.bywarp.melon.network.selector.SelectorGameType;
+import co.bywarp.melon.network.ServerSelector;
 import co.bywarp.melon.player.Client;
 import co.bywarp.melon.player.ClientManager;
+import co.bywarp.melon.player.inspection.ProfileInspection;
 import co.bywarp.melon.util.item.ItemBuilder;
 
 import org.bukkit.Material;
@@ -31,6 +31,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.SkullMeta;
 
 public class PlayerHotbarModule extends Module {
 
@@ -82,9 +83,7 @@ public class PlayerHotbarModule extends Module {
         inventory.setItem(3, PARTY);
         inventory.setItem(5, HATS);
         inventory.setItem(6, FRIENDS);
-        inventory.setItem(7, new ItemBuilder(Material.SKULL_ITEM)
-                .setDurability((short) 3)
-                .addHeadOptions("&aMy Profile", client.getName()).toItemStack());
+        inventory.setItem(7, getHeadItem(client));
     }
 
     @EventHandler
@@ -110,7 +109,7 @@ public class PlayerHotbarModule extends Module {
         event.setCancelled(true);
 
         if (event.getItem().isSimilar(SERVER_SELECTOR)) {
-            GameServerSelector.serve(getPlugin(), client, SelectorGameType.INFECTED);
+            ServerSelector.serve(getPlugin(), client);
             return;
         }
 
@@ -118,6 +117,13 @@ public class PlayerHotbarModule extends Module {
             LobbyServerSelector.serve(getPlugin(), client);
         }
 
+        if (event.getItem().getType() == Material.SKULL_ITEM) {
+            SkullMeta meta = (SkullMeta) event.getItem().getItemMeta();
+            if (meta.getOwner().equalsIgnoreCase(client.getName())) {
+                ProfileInspection profileInspection = new ProfileInspection(client, getPlugin());
+                profileInspection.open();
+            }
+        }
     }
 
     @EventHandler
@@ -155,6 +161,12 @@ public class PlayerHotbarModule extends Module {
 
         event.setCancelled(true);
         event.setResult(Event.Result.DENY);
+    }
+
+    private ItemStack getHeadItem(Client client) {
+        return new ItemBuilder(Material.SKULL_ITEM)
+                .setDurability((short) 3)
+                .addHeadOptions("&aMy Profile", client.getName()).toItemStack();
     }
 
 }

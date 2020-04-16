@@ -20,11 +20,14 @@ import co.bywarp.melon.network.NetworkPlayerCount;
 import co.bywarp.melon.npc.NpcManager;
 import co.bywarp.melon.plugin.MelonPlugin;
 import co.bywarp.tangerine.commands.EditCommand;
+import co.bywarp.tangerine.commands.RadiusCommand;
 import co.bywarp.tangerine.modules.AntiWeatherModule;
+import co.bywarp.tangerine.modules.player.ForcefieldModule;
 import co.bywarp.tangerine.modules.player.PlayerEditModule;
 import co.bywarp.tangerine.modules.player.PlayerHotbarModule;
 import co.bywarp.tangerine.modules.player.PlayerJumpModule;
 import co.bywarp.tangerine.modules.player.PlayerPostJoinModule;
+import co.bywarp.tangerine.modules.player.PlayerStackerModule;
 import co.bywarp.tangerine.modules.player.PlayerStateModule;
 import co.bywarp.tangerine.npcs.DailyRewardNPC;
 import co.bywarp.tangerine.npcs.EventNPC;
@@ -87,16 +90,20 @@ public class Tangerine extends MelonPlugin {
 
         ModuleManager modules = this.getModuleManager();
         PlayerEditModule editModule;
+        ForcefieldModule forcefieldModule;
 
         modules.load(new AntiWeatherModule());
         modules.load(editModule = new PlayerEditModule());
         modules.load(new PlayerHotbarModule(this.getClientManager(), editModule));
         modules.load(new PlayerJumpModule());
         modules.load(new PlayerPostJoinModule());
+        modules.load(new PlayerStackerModule(this.getClientManager()));
         modules.load(new PlayerStateModule());
+        modules.load(forcefieldModule = new ForcefieldModule(this.getClientManager()));
 
         CommandHandler command = this.getCommandHandler();
         command.registerCommand("edit", new String[] { "build" }, new EditCommand(editModule));
+        command.registerCommand("radius", new RadiusCommand(forcefieldModule));
 
         this.setScoreboardManager(new HubScoreboardManager(this));
 
