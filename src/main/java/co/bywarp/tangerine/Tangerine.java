@@ -36,6 +36,7 @@ import co.bywarp.tangerine.npcs.games.CannonsNPC;
 import co.bywarp.tangerine.npcs.games.DeathRunNPC;
 import co.bywarp.tangerine.npcs.games.InfectedNPC;
 import co.bywarp.tangerine.npcs.TutorialNPC;
+import co.bywarp.tangerine.npcs.games.MicroArcadeNPC;
 import co.bywarp.tangerine.scoreboard.HubScoreboardManager;
 
 import org.bukkit.Bukkit;
@@ -86,6 +87,7 @@ public class Tangerine extends MelonPlugin {
         npc.registerNPC(new DeathRunNPC(this, serverRepository));
         npc.registerNPC(new InfectedNPC(this, serverRepository));
         npc.registerNPC(new CannonsNPC(this, serverRepository));
+        npc.registerNPC(new MicroArcadeNPC(this, serverRepository));
         npc.registerNPC(new TutorialNPC());
 
         ModuleManager modules = this.getModuleManager();

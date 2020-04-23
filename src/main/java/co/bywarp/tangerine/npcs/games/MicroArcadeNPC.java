@@ -10,30 +10,35 @@
 package co.bywarp.tangerine.npcs.games;
 
 import co.bywarp.melon.bean.repository.ServerRepository;
-import co.bywarp.melon.network.GameServerSelector;
-import co.bywarp.melon.network.selector.SelectorGameType;
+import co.bywarp.melon.bean.server.Server;
+import co.bywarp.melon.network.MicroArcadeSelector;
 import co.bywarp.melon.npc.Npc;
 import co.bywarp.melon.player.Client;
 import co.bywarp.melon.plugin.MelonPlugin;
 import co.bywarp.melon.util.TimeUtil;
+import co.bywarp.melon.util.item.ItemBuilder;
 import co.bywarp.melon.util.world.Hologram;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.entity.Zombie;
+import org.bukkit.Material;
+import org.bukkit.entity.Skeleton;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
-public class InfectedNPC extends Npc<Zombie> {
+import java.util.ArrayList;
+
+public class MicroArcadeNPC extends Npc<Skeleton> {
 
     private MelonPlugin plugin;
+    private ServerRepository repository;
     private BukkitTask updater;
 
-    public InfectedNPC(MelonPlugin plugin, ServerRepository repository) {
+    public MicroArcadeNPC(MelonPlugin plugin, ServerRepository repository) {
         super(
-                new Location(Bukkit.getWorld("Hub"), -28.5, 60.5, -66.5, -156f, 3.5f),
-                Zombie.class,
-                "&2&lInfected",
+                new Location(Bukkit.getWorld("Hub"), -8.5, 60.5, -74.5, -156.2f, 3.5f),
+                Skeleton.class,
+                "&2&lMicro Arcade",
                 " ",
                 "&e0 &fcurrently playing",
                 "&e0 &fgame servers",
@@ -42,12 +47,13 @@ public class InfectedNPC extends Npc<Zombie> {
         );
 
         this.plugin = plugin;
+        this.repository = repository;
         this.updater = new BukkitRunnable() {
             @Override
             public void run() {
                 Hologram hologram = getHologram();
-                int players = repository.getPlayers("Infected");
-                int servers = repository.getServers("Infected").size();
+                int players = getPlayers();
+                int servers = repository.getAllMicroArcadeServers().size();
 
                 hologram.update(2, "&e" + players + " &fcurrently playing");
                 hologram.update(3, "&e" + servers + " &fgame server" + TimeUtil.numberEnding(servers));
@@ -59,9 +65,11 @@ public class InfectedNPC extends Npc<Zombie> {
     public void spawn() {
         super.spawn();
 
-        Zombie zombie = (Zombie) getEntity();
-        zombie.setBaby(false);
-        zombie.setVillager(false);
+        Skeleton skeleton = (Skeleton) getEntity();
+        skeleton.getEquipment().setItemInHand(
+                new ItemBuilder(Material.PRISMARINE_CRYSTALS)
+                        .toItemStack()
+        );
     }
 
     @Override
@@ -75,7 +83,17 @@ public class InfectedNPC extends Npc<Zombie> {
 
     @Override
     public void interact(Client client) {
-        GameServerSelector.serve(plugin, client, SelectorGameType.INFECTED);
+        MicroArcadeSelector.serve(plugin, client);
+    }
+
+    private int getPlayers() {
+        ArrayList<Server> all = repository.getAllMicroArcadeServers();
+        int i = 0;
+        for (Server server : all) {
+            i += server.getPlayers();
+        }
+
+        return i;
     }
 
 }

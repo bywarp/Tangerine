@@ -26,7 +26,6 @@ import org.bukkit.entity.Skeleton;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
-//
 public class BingoNPC extends Npc<Skeleton> {
 
     private MelonPlugin plugin;
