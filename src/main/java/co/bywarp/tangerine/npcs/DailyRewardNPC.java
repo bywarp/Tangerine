@@ -29,9 +29,9 @@ public class DailyRewardNPC extends Npc<Villager> implements Listener {
 
     public DailyRewardNPC(MelonPlugin plugin) {
         super(
-                new Location(Bukkit.getWorld("Hub"), -6.5, 59, -80.5, -90f, 3.5f),
+                new Location(Bukkit.getWorld("Hub"), -6.5, 59, -80.5, 90f, 3.5f),
                 Villager.class,
-                "&2&lRewards",
+                "&2&lThe Delivery Boy",
                 " ",
                 "&aRewards &fare coming soon,",
                 "&fcheck back later!"
@@ -51,7 +51,6 @@ public class DailyRewardNPC extends Npc<Villager> implements Listener {
 
     @Override
     public void interact(Client client) {
-        client.sendMessage(Lang.generate("Melon", "&aRewards &7are coming soon."));
     }
 
     @Override

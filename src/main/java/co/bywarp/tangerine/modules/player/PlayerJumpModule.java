@@ -25,8 +25,11 @@ import org.bukkit.event.player.PlayerToggleFlightEvent;
 
 public class PlayerJumpModule extends Module {
 
-    public PlayerJumpModule() {
+    private PlayerFlyModule flyModule;
+
+    public PlayerJumpModule(PlayerFlyModule flyModule) {
         super("Player Jump");
+        this.flyModule = flyModule;
     }
 
     @Override
@@ -94,7 +97,8 @@ public class PlayerJumpModule extends Module {
 
     private boolean canJump(Client client) {
         return client.getPlayer().getGameMode() != GameMode.SPECTATOR
-                && client.getPlayer().getGameMode() != GameMode.CREATIVE;
+                && client.getPlayer().getGameMode() != GameMode.CREATIVE
+                && !flyModule.has(client);
     }
 
 }

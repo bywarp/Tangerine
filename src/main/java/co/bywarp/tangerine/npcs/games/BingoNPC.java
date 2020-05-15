@@ -33,7 +33,7 @@ public class BingoNPC extends Npc<Skeleton> {
 
     public BingoNPC(MelonPlugin plugin, ServerRepository repository) {
         super(
-                new Location(Bukkit.getWorld("Hub"), -16.5, 60.5, -94.5, 23.5f, 3.5f),
+                new Location(Bukkit.getWorld("Hub"), -16.5, 60.5, -94.5, 25f, 3.5f),
                 Skeleton.class,
                 "&2&lBingo",
                 " ",

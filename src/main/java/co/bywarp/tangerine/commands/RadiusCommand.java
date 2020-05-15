@@ -23,7 +23,7 @@ public class RadiusCommand extends Command {
     private ForcefieldModule manager;
 
     public RadiusCommand(ForcefieldModule manager) {
-        super(Rank.DEV, Lang.generateSingleHelp("Forcefield", "/radius <amount>"));
+        super(Rank.DIRECTOR, Lang.generateSingleHelp("Forcefield", "/radius <amount>"));
         this.manager = manager;
     }
 

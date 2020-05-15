@@ -33,7 +33,7 @@ public class CannonsNPC extends Npc<Skeleton> {
 
     public CannonsNPC(MelonPlugin plugin, ServerRepository repository) {
         super(
-                new Location(Bukkit.getWorld("Hub"), -8.5, 60.5, -86.5, -90f, 3.5f),
+                new Location(Bukkit.getWorld("Hub"), -8.5, 60.5, -86.5, 115f, 3.5f),
                 Skeleton.class,
                 "&2&lCannons",
                 " ",

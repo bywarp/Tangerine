@@ -26,7 +26,7 @@ public class EventNPC extends Npc<Skeleton> {
 
     public EventNPC(MelonPlugin plugin) {
         super(
-                new Location(Bukkit.getWorld("Hub"), -15.5, 59.5, -73.5, 134.5f, 3.5f),
+                new Location(Bukkit.getWorld("Hub"), -15.5, 59.5, -73.5, 130f, 3.5f),
                 Skeleton.class,
                 "&2&lEvents",
                 " ",
@@ -52,7 +52,6 @@ public class EventNPC extends Npc<Skeleton> {
 
     @Override
     public void interact(Client client) {
-        client.sendMessage(Lang.generate("Events", "To view our event schedule, please visit &fwww.melon.gg/events"));
     }
 
 }

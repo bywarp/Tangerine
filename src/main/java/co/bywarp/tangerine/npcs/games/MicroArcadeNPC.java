@@ -36,7 +36,7 @@ public class MicroArcadeNPC extends Npc<Skeleton> {
 
     public MicroArcadeNPC(MelonPlugin plugin, ServerRepository repository) {
         super(
-                new Location(Bukkit.getWorld("Hub"), -8.5, 60.5, -74.5, -156.2f, 3.5f),
+                new Location(Bukkit.getWorld("Hub"), -8.5, 60.5, -74.5, 155f, 3.5f),
                 Skeleton.class,
                 "&2&lMicro Arcade",
                 " ",

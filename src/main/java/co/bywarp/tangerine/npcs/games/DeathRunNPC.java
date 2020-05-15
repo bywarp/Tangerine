@@ -33,7 +33,7 @@ public class DeathRunNPC extends Npc<Skeleton> {
 
     public DeathRunNPC(MelonPlugin plugin, ServerRepository repository) {
         super(
-                new Location(Bukkit.getWorld("Hub"), -16.5, 60.5, -66.5, -90f, 3.5f),
+                new Location(Bukkit.getWorld("Hub"), -16.5, 60.5, -66.5, 155f, 3.5f),
                 Skeleton.class,
                 "&2&lDeath Run",
                 " ",

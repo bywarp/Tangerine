@@ -66,6 +66,11 @@ public class PlayerStackerModule extends Module {
 
                 clicker.sendMessage(Lang.generate("Stacker", "Picked up " + clickedClient.getRank().getCompatPrefix() + " &a" + clickedClient.getName() + "&7."));
                 clickedClient.sendMessage(Lang.generate("Stacker", clicker.getRank().getCompatPrefix() + " &a" + clicker.getName() + " &7picked you up."));
+
+                if (passenger == clickedClient.getPlayer()) {
+                    return;
+                }
+
                 passenger.setPassenger(clickedClient.getPlayer());
             }
         }

@@ -24,19 +24,21 @@ import co.bywarp.tangerine.commands.RadiusCommand;
 import co.bywarp.tangerine.modules.AntiWeatherModule;
 import co.bywarp.tangerine.modules.player.ForcefieldModule;
 import co.bywarp.tangerine.modules.player.PlayerEditModule;
+import co.bywarp.tangerine.modules.player.PlayerFlyModule;
 import co.bywarp.tangerine.modules.player.PlayerHotbarModule;
 import co.bywarp.tangerine.modules.player.PlayerJumpModule;
 import co.bywarp.tangerine.modules.player.PlayerPostJoinModule;
 import co.bywarp.tangerine.modules.player.PlayerStackerModule;
 import co.bywarp.tangerine.modules.player.PlayerStateModule;
+import co.bywarp.tangerine.modules.player.punch.PlayerPunchModule;
 import co.bywarp.tangerine.npcs.DailyRewardNPC;
 import co.bywarp.tangerine.npcs.EventNPC;
+import co.bywarp.tangerine.npcs.TutorialNPC;
 import co.bywarp.tangerine.npcs.games.BingoNPC;
 import co.bywarp.tangerine.npcs.games.CannonsNPC;
 import co.bywarp.tangerine.npcs.games.DeathRunNPC;
-import co.bywarp.tangerine.npcs.games.InfectedNPC;
-import co.bywarp.tangerine.npcs.TutorialNPC;
 import co.bywarp.tangerine.npcs.games.MicroArcadeNPC;
+import co.bywarp.tangerine.recharge.RechargeManager;
 import co.bywarp.tangerine.scoreboard.HubScoreboardManager;
 
 import org.bukkit.Bukkit;
@@ -51,6 +53,7 @@ public class Tangerine extends MelonPlugin {
 
     @Getter private static Location globalSpawn;
     @Getter private static NetworkPlayerCount networkPlayerCount;
+    @Getter private static RechargeManager rechargeManager;
     @Getter private static VanishModule vanishModule;
     @Getter private static ChatStatusModule chatStatus;
 
@@ -66,6 +69,7 @@ public class Tangerine extends MelonPlugin {
     @Override
     public void onDisable() {
         super.onDisable();
+        rechargeManager.close();
     }
 
     @EventHandler
@@ -75,6 +79,7 @@ public class Tangerine extends MelonPlugin {
 
         globalSpawn = new Location(Bukkit.getWorld("Hub"), -22.5, 60, -80.5, -90, 0);
         networkPlayerCount = getPlayerCount();
+        rechargeManager = new RechargeManager(this);
         vanishModule = (VanishModule) getModuleManager().getModule(VanishModule.class);
         chatStatus = (ChatStatusModule) getModuleManager().getModule(ChatStatusModule.class);
 
@@ -85,22 +90,25 @@ public class Tangerine extends MelonPlugin {
         npc.registerNPC(new EventNPC(this));
         npc.registerNPC(new BingoNPC(this, serverRepository));
         npc.registerNPC(new DeathRunNPC(this, serverRepository));
-        npc.registerNPC(new InfectedNPC(this, serverRepository));
         npc.registerNPC(new CannonsNPC(this, serverRepository));
         npc.registerNPC(new MicroArcadeNPC(this, serverRepository));
         npc.registerNPC(new TutorialNPC());
 
         ModuleManager modules = this.getModuleManager();
+
         PlayerEditModule editModule;
+        PlayerFlyModule flyModule;
         ForcefieldModule forcefieldModule;
 
         modules.load(new AntiWeatherModule());
         modules.load(editModule = new PlayerEditModule());
         modules.load(new PlayerHotbarModule(this.getClientManager(), editModule));
-        modules.load(new PlayerJumpModule());
+        modules.load(flyModule = new PlayerFlyModule());
+        modules.load(new PlayerJumpModule(flyModule));
         modules.load(new PlayerPostJoinModule());
         modules.load(new PlayerStackerModule(this.getClientManager()));
         modules.load(new PlayerStateModule());
+        modules.load(new PlayerPunchModule(rechargeManager));
         modules.load(forcefieldModule = new ForcefieldModule(this.getClientManager()));
 
         CommandHandler command = this.getCommandHandler();
