@@ -16,20 +16,15 @@ import co.bywarp.melon.module.ModuleManager;
 import co.bywarp.melon.module.defaults.DefaultModules;
 import co.bywarp.melon.module.modules.defaults.player.chat.ChatStatusModule;
 import co.bywarp.melon.module.modules.defaults.staff.vanish.VanishModule;
+import co.bywarp.melon.module.modules.treasure.TreasureChestModule;
 import co.bywarp.melon.network.NetworkPlayerCount;
 import co.bywarp.melon.npc.NpcManager;
+import co.bywarp.melon.player.treasure.chest.TreasureChest;
 import co.bywarp.melon.plugin.MelonPlugin;
 import co.bywarp.tangerine.commands.EditCommand;
 import co.bywarp.tangerine.commands.RadiusCommand;
 import co.bywarp.tangerine.modules.AntiWeatherModule;
-import co.bywarp.tangerine.modules.player.ForcefieldModule;
-import co.bywarp.tangerine.modules.player.PlayerEditModule;
-import co.bywarp.tangerine.modules.player.PlayerFlyModule;
-import co.bywarp.tangerine.modules.player.PlayerHotbarModule;
-import co.bywarp.tangerine.modules.player.PlayerJumpModule;
-import co.bywarp.tangerine.modules.player.PlayerPostJoinModule;
-import co.bywarp.tangerine.modules.player.PlayerStackerModule;
-import co.bywarp.tangerine.modules.player.PlayerStateModule;
+import co.bywarp.tangerine.modules.player.*;
 import co.bywarp.tangerine.modules.player.punch.PlayerPunchModule;
 import co.bywarp.tangerine.npcs.DailyRewardNPC;
 import co.bywarp.tangerine.npcs.EventNPC;
@@ -40,14 +35,12 @@ import co.bywarp.tangerine.npcs.games.DeathRunNPC;
 import co.bywarp.tangerine.npcs.games.MicroArcadeNPC;
 import co.bywarp.tangerine.recharge.RechargeManager;
 import co.bywarp.tangerine.scoreboard.HubScoreboardManager;
-
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;
-
-import lombok.Getter;
 
 public class Tangerine extends MelonPlugin {
 
@@ -110,6 +103,13 @@ public class Tangerine extends MelonPlugin {
         modules.load(new PlayerStateModule());
         modules.load(new PlayerPunchModule(rechargeManager));
         modules.load(forcefieldModule = new ForcefieldModule(this.getClientManager()));
+
+        TreasureChest chest = new TreasureChest(
+                this,
+                this.getTreasureItemManager(),
+                new Location(getGlobalSpawn().getWorld(), -30, 59, -88));
+        TreasureChestModule treasureChestModule = new TreasureChestModule(chest);
+        modules.load(treasureChestModule);
 
         CommandHandler command = this.getCommandHandler();
         command.registerCommand("edit", new String[] { "build" }, new EditCommand(editModule));
