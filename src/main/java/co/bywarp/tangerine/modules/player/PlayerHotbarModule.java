@@ -15,6 +15,7 @@ import co.bywarp.melon.network.ServerSelector;
 import co.bywarp.melon.player.Client;
 import co.bywarp.melon.player.ClientManager;
 import co.bywarp.melon.player.inspection.ProfileInspection;
+import co.bywarp.melon.player.inspection.treasure.TreasureInspection;
 import co.bywarp.melon.util.item.ItemBuilder;
 
 import org.bukkit.Material;
@@ -108,21 +109,29 @@ public class PlayerHotbarModule extends Module {
 
         event.setCancelled(true);
 
-        if (event.getItem().isSimilar(SERVER_SELECTOR)) {
+        ItemStack item = event.getItem();
+        if (item.isSimilar(SERVER_SELECTOR)) {
             ServerSelector.serve(getPlugin(), client);
             return;
         }
 
-        if (event.getItem().isSimilar(LOBBY_SELECTOR)) {
+        if (item.isSimilar(LOBBY_SELECTOR)) {
             LobbyServerSelector.serve(getPlugin(), client);
+            return;
         }
 
-        if (event.getItem().getType() == Material.SKULL_ITEM) {
+        if (item.isSimilar(HATS)) {
+            TreasureInspection.serve(getPlugin(), client);
+            return;
+        }
+
+        if (item.getType() == Material.SKULL_ITEM) {
             SkullMeta meta = (SkullMeta) event.getItem().getItemMeta();
             if (meta.getOwner().equalsIgnoreCase(client.getName())) {
                 ProfileInspection profileInspection = new ProfileInspection(client, getPlugin());
                 profileInspection.open();
             }
+            return;
         }
     }
 
