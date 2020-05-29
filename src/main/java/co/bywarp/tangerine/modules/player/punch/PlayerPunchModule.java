@@ -18,6 +18,7 @@ import co.bywarp.tangerine.commands.PunchCommand;
 import co.bywarp.tangerine.recharge.RechargeManager;
 import co.bywarp.tangerine.recharge.Rechargeable;
 
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.World;
@@ -74,6 +75,13 @@ public class PlayerPunchModule extends Module {
             return;
         }
 
+        if (hit.getStatisticsManager().has("Dev", "IgnorePunch")
+                || hit.getPlayer().getGameMode() == GameMode.SPECTATOR
+                || hit.getPlayer().getGameMode() == GameMode.CREATIVE) {
+            hitter.sendMessage(Lang.generate("Punch", "You can't punch " + hit.getRank().getCompatPrefix() + " &a" + hit.getName() + "&7."));
+            return;
+        }
+
         PlayerPunchRecharge recharge = new PlayerPunchRecharge();
         if (!rechargeManager.ensureRecharge(recharge, hitter)) {
             hitter.sendMessage(rechargeManager.getRechargeMessage(recharge, hitter));
@@ -85,7 +93,6 @@ public class PlayerPunchModule extends Module {
         Vector opposite = player.subtract(center).toVector();
 
         opposite.setY(1.0001);
-//        opposite.multiply(1.0001);
         hit.getPlayer().setVelocity(opposite);
 
         SoundUtil.play(hit, Sound.FIREWORK_LAUNCH, 10.0f, 0.75f);

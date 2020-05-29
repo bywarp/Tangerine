@@ -24,23 +24,34 @@ import co.bywarp.melon.plugin.MelonPlugin;
 import co.bywarp.tangerine.commands.EditCommand;
 import co.bywarp.tangerine.commands.RadiusCommand;
 import co.bywarp.tangerine.modules.AntiWeatherModule;
-import co.bywarp.tangerine.modules.player.*;
+import co.bywarp.tangerine.modules.player.ForcefieldModule;
+import co.bywarp.tangerine.modules.player.PlayerEditModule;
+import co.bywarp.tangerine.modules.player.PlayerFlyModule;
+import co.bywarp.tangerine.modules.player.PlayerHotbarModule;
+import co.bywarp.tangerine.modules.player.PlayerJumpModule;
+import co.bywarp.tangerine.modules.player.PlayerPostJoinModule;
+import co.bywarp.tangerine.modules.player.PlayerStackerModule;
+import co.bywarp.tangerine.modules.player.PlayerStateModule;
 import co.bywarp.tangerine.modules.player.punch.PlayerPunchModule;
+import co.bywarp.tangerine.npcs.BigSteveNPC;
 import co.bywarp.tangerine.npcs.DailyRewardNPC;
 import co.bywarp.tangerine.npcs.EventNPC;
+import co.bywarp.tangerine.npcs.MelonClubOwnerNPC;
 import co.bywarp.tangerine.npcs.TutorialNPC;
 import co.bywarp.tangerine.npcs.games.BingoNPC;
 import co.bywarp.tangerine.npcs.games.CannonsNPC;
-import co.bywarp.tangerine.npcs.games.DeathRunNPC;
+import co.bywarp.tangerine.npcs.games.DeathmatchNPC;
 import co.bywarp.tangerine.npcs.games.MicroArcadeNPC;
 import co.bywarp.tangerine.recharge.RechargeManager;
 import co.bywarp.tangerine.scoreboard.HubScoreboardManager;
-import lombok.Getter;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;
+
+import lombok.Getter;
 
 public class Tangerine extends MelonPlugin {
 
@@ -82,10 +93,12 @@ public class Tangerine extends MelonPlugin {
         npc.registerNPC(new DailyRewardNPC(this));
         npc.registerNPC(new EventNPC(this));
         npc.registerNPC(new BingoNPC(this, serverRepository));
-        npc.registerNPC(new DeathRunNPC(this, serverRepository));
+        npc.registerNPC(new DeathmatchNPC(this, serverRepository));
         npc.registerNPC(new CannonsNPC(this, serverRepository));
         npc.registerNPC(new MicroArcadeNPC(this, serverRepository));
         npc.registerNPC(new TutorialNPC());
+        npc.registerNPC(new BigSteveNPC(this));
+        npc.registerNPC(new MelonClubOwnerNPC());
 
         ModuleManager modules = this.getModuleManager();
 

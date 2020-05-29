@@ -98,7 +98,7 @@ public class PlayerJumpModule extends Module {
     private boolean canJump(Client client) {
         return client.getPlayer().getGameMode() != GameMode.SPECTATOR
                 && client.getPlayer().getGameMode() != GameMode.CREATIVE
-                && !flyModule.has(client);
+                && !client.getStatisticsManager().has("Donor", "HubFlight");
     }
 
 }

@@ -46,6 +46,11 @@ public class PlayerPostJoinModule extends Module {
         Client client = clientManager.getPlayer(event.getPlayer());
         client.teleport(Tangerine.getGlobalSpawn());
 
+        if (client.getStatisticsManager().has("Donor", "HubFlight")) {
+            client.getPlayer().setAllowFlight(true);
+            client.getPlayer().setFlying(true);
+        }
+
         client.sendCenteredMessage(Lang.DIVIDER);
         client.sendMessage(" ");
         client.sendCenteredMessage("&2&lMelon Games");

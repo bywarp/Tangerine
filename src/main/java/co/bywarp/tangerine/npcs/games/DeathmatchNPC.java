@@ -26,16 +26,16 @@ import org.bukkit.entity.Skeleton;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
-public class DeathRunNPC extends Npc<Skeleton> {
+public class DeathmatchNPC extends Npc<Skeleton> {
 
     private MelonPlugin plugin;
     private BukkitTask updater;
 
-    public DeathRunNPC(MelonPlugin plugin, ServerRepository repository) {
+    public DeathmatchNPC(MelonPlugin plugin, ServerRepository repository) {
         super(
                 new Location(Bukkit.getWorld("Hub"), -16.5, 60.5, -66.5, 155f, 3.5f),
                 Skeleton.class,
-                "&2&lDeath Run",
+                "&2&lDeathmatch",
                 " ",
                 "&e0 &fcurrently playing",
                 "&e0 &fgame servers",
@@ -48,8 +48,8 @@ public class DeathRunNPC extends Npc<Skeleton> {
             @Override
             public void run() {
                 Hologram hologram = getHologram();
-                int players = repository.getPlayers("DeathRun");
-                int servers = repository.getServers("DeathRun").size();
+                int players = repository.getPlayers("Deathmatch");
+                int servers = repository.getServers("Deathmatch").size();
 
                 hologram.update(2, "&e" + players + " &fcurrently playing");
                 hologram.update(3, "&e" + servers + " &fgame server" + TimeUtil.numberEnding(servers));
@@ -63,7 +63,7 @@ public class DeathRunNPC extends Npc<Skeleton> {
 
         Skeleton skeleton = (Skeleton) getEntity();
         skeleton.getEquipment().setItemInHand(
-                new ItemBuilder(Material.BLAZE_ROD)
+                new ItemBuilder(Material.BLAZE_POWDER)
                         .toItemStack()
         );
     }
@@ -79,7 +79,7 @@ public class DeathRunNPC extends Npc<Skeleton> {
 
     @Override
     public void interact(Client client) {
-        GameServerSelector.serve(plugin, client, SelectorGameType.DEATH_RUN);
+        GameServerSelector.serve(plugin, client, SelectorGameType.DEATHMATCH);
     }
 
 }

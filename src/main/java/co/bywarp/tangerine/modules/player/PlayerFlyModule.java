@@ -14,16 +14,12 @@ import co.bywarp.melon.module.Module;
 import co.bywarp.melon.player.Client;
 import co.bywarp.tangerine.commands.FlyCommand;
 
-import java.util.ArrayList;
 import java.util.function.Consumer;
 
 public class PlayerFlyModule extends Module {
 
-    private ArrayList<Client> clients;
-
     public PlayerFlyModule() {
         super("Player Fly");
-        this.clients = new ArrayList<>();
     }
 
     @Override
@@ -38,22 +34,16 @@ public class PlayerFlyModule extends Module {
     }
 
     public void toggle(Client client, Consumer<Boolean> then) {
-        boolean state = clients.contains(client);
+        boolean state = client.getStatisticsManager().has("Donor", "HubFlight");
         client.getPlayer().setAllowFlight(!state);
         client.getPlayer().setFlying(!state);
 
-        if (state) {
-            clients.remove(client);
-            then.accept(false);
-            return;
-        }
-
-        clients.add(client);
-        then.accept(true);
+        client.getStatisticsManager().toggle("Donor", "HubFlight");
+        then.accept(!state);
     }
 
     public boolean has(Client client) {
-        return clients.contains(client);
+        return client.getStatisticsManager().has("Donor", "HubFlight");
     }
 
 }
