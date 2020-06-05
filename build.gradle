@@ -1,3 +1,12 @@
+/*
+ * Copyright (c) 2019-2020 Warp <legal@warp.pw>
+ * All Rights Reserved.
+ *
+ * This software is proprietary and is designed and intended for internal use only.
+ * Unauthorized use, replication, distribution, or modification of this software
+ * in any capacity is unlawful and punishable by the full extent of the law.
+ */
+
 plugins {
     id 'java'
     id 'maven'
@@ -48,7 +57,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly group: 'co.bywarp', name: 'Melon', version: '0.1-3723b4a', changing: true
+    compileOnly group: 'co.bywarp', name: 'Melon', version: '0.1-530d8d9', changing: true
     testCompile group: 'junit', name: 'junit', version: '4.12'
 
     compileOnly group: 'org.spigotmc', name: 'spigot', version: '1.8.8-R0.1-SNAPSHOT'
@@ -69,6 +78,6 @@ shadowJar {
     classifier = null
 
     manifest {
-        attributes 'Main-Class': 'co.bywarp.bacon.Bacon'
+        attributes 'Main-Class': 'co.bywarp.tangerine.Tangerine'
     }
 }

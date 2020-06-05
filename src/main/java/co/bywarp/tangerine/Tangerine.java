@@ -16,6 +16,7 @@ import co.bywarp.melon.module.ModuleManager;
 import co.bywarp.melon.module.defaults.DefaultModules;
 import co.bywarp.melon.module.modules.defaults.player.chat.ChatStatusModule;
 import co.bywarp.melon.module.modules.defaults.staff.vanish.VanishModule;
+import co.bywarp.melon.module.modules.treasure.PlayerTreasureModule;
 import co.bywarp.melon.module.modules.treasure.TreasureChestModule;
 import co.bywarp.melon.network.NetworkPlayerCount;
 import co.bywarp.melon.npc.NpcManager;
@@ -23,6 +24,7 @@ import co.bywarp.melon.player.treasure.chest.TreasureChest;
 import co.bywarp.melon.plugin.MelonPlugin;
 import co.bywarp.tangerine.commands.EditCommand;
 import co.bywarp.tangerine.commands.RadiusCommand;
+import co.bywarp.tangerine.commands.ToggleLootCommand;
 import co.bywarp.tangerine.modules.AntiWeatherModule;
 import co.bywarp.tangerine.modules.player.ForcefieldModule;
 import co.bywarp.tangerine.modules.player.PlayerEditModule;
@@ -52,6 +54,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 import lombok.Getter;
+import lombok.Setter;
 
 public class Tangerine extends MelonPlugin {
 
@@ -60,6 +63,8 @@ public class Tangerine extends MelonPlugin {
     @Getter private static RechargeManager rechargeManager;
     @Getter private static VanishModule vanishModule;
     @Getter private static ChatStatusModule chatStatus;
+
+    @Getter @Setter private boolean lootDisabled;
 
     public Tangerine() {
         super("Tangerine", 0.1, DefaultModules.allOn());
@@ -86,6 +91,7 @@ public class Tangerine extends MelonPlugin {
         rechargeManager = new RechargeManager(this);
         vanishModule = (VanishModule) getModuleManager().getModule(VanishModule.class);
         chatStatus = (ChatStatusModule) getModuleManager().getModule(ChatStatusModule.class);
+        lootDisabled = false;
 
         ServerRepository serverRepository = this.getBeans().getServerRepository();
         NpcManager npc = this.getNpcManager();
@@ -106,9 +112,12 @@ public class Tangerine extends MelonPlugin {
         PlayerFlyModule flyModule;
         ForcefieldModule forcefieldModule;
 
+        PlayerTreasureModule<Tangerine> treasureModule = new PlayerTreasureModule<>(this, Tangerine::isLootDisabled);
+
         modules.load(new AntiWeatherModule());
         modules.load(editModule = new PlayerEditModule());
         modules.load(new PlayerHotbarModule(this.getClientManager(), editModule));
+        modules.load(treasureModule);
         modules.load(flyModule = new PlayerFlyModule());
         modules.load(new PlayerJumpModule(flyModule));
         modules.load(new PlayerPostJoinModule());
@@ -127,6 +136,7 @@ public class Tangerine extends MelonPlugin {
         CommandHandler command = this.getCommandHandler();
         command.registerCommand("edit", new String[] { "build" }, new EditCommand(editModule));
         command.registerCommand("radius", new RadiusCommand(forcefieldModule));
+        command.registerCommand("toggleloot", new ToggleLootCommand(this));
 
         this.setScoreboardManager(new HubScoreboardManager(this));
 

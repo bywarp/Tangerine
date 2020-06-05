@@ -85,11 +85,6 @@ public class PlayerJumpModule extends Module {
             return;
         }
 
-        if (client.isFly()) {
-            player.setAllowFlight(true);
-            return;
-        }
-
         if (player.getLocation().clone().subtract(0, 1, 0).getBlock().getType() != Material.AIR) {
             player.setAllowFlight(true);
         }
