@@ -13,7 +13,6 @@ import co.bywarp.melon.module.Module;
 import co.bywarp.melon.player.Client;
 import co.bywarp.melon.player.ClientManager;
 import co.bywarp.melon.player.Rank;
-import co.bywarp.melon.util.player.PlayerUtils;
 import co.bywarp.melon.util.player.SoundUtil;
 
 import org.bukkit.Sound;
@@ -79,11 +78,8 @@ public class ForcefieldModule extends Module {
     private boolean isEnabled(Client client) {
         return client
                 .getStatisticsManager()
-                .getNodeTree()
-                .get("Player")
-                .getNode("Prefs")
-                .getNode("Media")
-                .getBoolean("Forcefield");
+                .get("prefs.media.forcefield")
+                .asBoolean();
     }
 
 }

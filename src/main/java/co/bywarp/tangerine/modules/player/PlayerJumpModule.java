@@ -12,7 +12,6 @@ package co.bywarp.tangerine.modules.player;
 import co.bywarp.melon.module.Module;
 import co.bywarp.melon.player.Client;
 import co.bywarp.melon.player.ClientManager;
-import co.bywarp.melon.player.statistics.data.StatisticNode;
 import co.bywarp.melon.util.player.SoundUtil;
 
 import org.bukkit.GameMode;
@@ -59,14 +58,7 @@ public class PlayerJumpModule extends Module {
             player.setFlying(false);
             player.setVelocity(player.getLocation().getDirection().clone().multiply(1.5));
 
-            StatisticNode node = client
-                    .getStatisticsManager()
-                    .getNodeTree()
-                    .get("Player")
-                    .getNode("Prefs")
-                    .getNode("User");
-
-            if (node.getBoolean("JumpSound")) {
+            if (client.getStatisticsManager().get("prefs.user.jumpSound").asBoolean()) {
                 SoundUtil.play(client, Sound.ENDERDRAGON_WINGS, 1, 0.5f);
             }
 
@@ -93,7 +85,7 @@ public class PlayerJumpModule extends Module {
     private boolean canJump(Client client) {
         return client.getPlayer().getGameMode() != GameMode.SPECTATOR
                 && client.getPlayer().getGameMode() != GameMode.CREATIVE
-                && !client.getStatisticsManager().has("Donor", "HubFlight");
+                && !client.getStatisticsManager().get("prefs.donor.hubFlight").asBoolean();
     }
 
 }

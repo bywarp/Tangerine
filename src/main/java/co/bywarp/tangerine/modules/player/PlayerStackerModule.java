@@ -100,11 +100,8 @@ public class PlayerStackerModule extends Module {
 
     private boolean isEnabled(Client client) {
         return client.getStatisticsManager()
-                .getNodeTree()
-                .get("Player")
-                .getNode("Prefs")
-                .getNode("User")
-                .getBoolean("Stacker");
+                .get("prefs.user.stacker")
+                .asBoolean();
     }
 
 }

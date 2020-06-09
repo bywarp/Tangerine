@@ -12,6 +12,7 @@ package co.bywarp.tangerine.modules.player;
 import co.bywarp.melon.command.CommandHandler;
 import co.bywarp.melon.module.Module;
 import co.bywarp.melon.player.Client;
+import co.bywarp.melon.statistics.Statistic;
 import co.bywarp.tangerine.commands.FlyCommand;
 
 import java.util.function.Consumer;
@@ -34,16 +35,18 @@ public class PlayerFlyModule extends Module {
     }
 
     public void toggle(Client client, Consumer<Boolean> then) {
-        boolean state = client.getStatisticsManager().has("Donor", "HubFlight");
-        client.getPlayer().setAllowFlight(!state);
-        client.getPlayer().setFlying(!state);
+        Statistic statistic = client.getStatisticsManager().get("prefs.donor.hubFlight");
+        statistic.invert();
 
-        client.getStatisticsManager().toggle("Donor", "HubFlight");
-        then.accept(!state);
+        client.getPlayer().setAllowFlight(statistic.asBoolean());
+        client.getPlayer().setFlying(statistic.asBoolean());
+
+        client.getStatisticsManager().set("prefs.donor.hubFlight", statistic.asBoolean());
+        then.accept(statistic.asBoolean());
     }
 
     public boolean has(Client client) {
-        return client.getStatisticsManager().has("Donor", "HubFlight");
+        return client.getStatisticsManager().get("prefs.donor.hubFlight").asBoolean();
     }
 
 }
