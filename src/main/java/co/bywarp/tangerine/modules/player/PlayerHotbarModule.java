@@ -55,34 +55,38 @@ public class PlayerHotbarModule extends Module {
         this.unregisterListeners();
     }
     
-    private ItemStack SERVER_SELECTOR = new ItemBuilder(Material.COMPASS)
+    private static ItemStack SERVER_SELECTOR = new ItemBuilder(Material.COMPASS)
             .setName("&aServer Selector")
             .toItemStack();
 
-    private ItemStack LOBBY_SELECTOR = new ItemBuilder(Material.WATCH)
+    private static ItemStack LOBBY_SELECTOR = new ItemBuilder(Material.WATCH)
             .setName("&aLobby Selector")
             .toItemStack();
 
-    private ItemStack PARTY = new ItemBuilder(Material.CHEST)
+    private static ItemStack PARTY = new ItemBuilder(Material.CHEST)
             .setName("&aParty")
             .toItemStack();
 
-    private ItemStack HATS = new ItemBuilder(Material.STORAGE_MINECART)
+    private static ItemStack TREASURE = new ItemBuilder(Material.STORAGE_MINECART)
             .setName("&aTreasure")
             .toItemStack();
 
-    private ItemStack FRIENDS = new ItemBuilder(Material.BOOK)
+    private static ItemStack FRIENDS = new ItemBuilder(Material.BOOK)
             .setName("&aFriends")
             .toItemStack();
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onJoin(PlayerJoinEvent event) {
         Client client = clientManager.getPlayer(event.getPlayer());
+        applyHotbar(client);
+    }
+
+    public static void applyHotbar(Client client) {
         Inventory inventory = client.getInventory();
         inventory.setItem(1, SERVER_SELECTOR);
         inventory.setItem(2, LOBBY_SELECTOR);
         inventory.setItem(3, PARTY);
-        inventory.setItem(5, HATS);
+        inventory.setItem(5, TREASURE);
         inventory.setItem(6, FRIENDS);
         inventory.setItem(7, getHeadItem(client));
     }
@@ -120,7 +124,7 @@ public class PlayerHotbarModule extends Module {
             return;
         }
 
-        if (item.isSimilar(HATS)) {
+        if (item.isSimilar(TREASURE)) {
             TreasureInspection.serve(getPlugin(), client);
             return;
         }
@@ -172,7 +176,7 @@ public class PlayerHotbarModule extends Module {
         event.setResult(Event.Result.DENY);
     }
 
-    private ItemStack getHeadItem(Client client) {
+    private static ItemStack getHeadItem(Client client) {
         return new ItemBuilder(Material.SKULL_ITEM)
                 .setDurability((short) 3)
                 .addHeadOptions("&aMy Profile", client.getName()).toItemStack();

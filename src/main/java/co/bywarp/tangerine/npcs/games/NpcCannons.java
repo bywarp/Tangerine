@@ -10,8 +10,8 @@
 package co.bywarp.tangerine.npcs.games;
 
 import co.bywarp.melon.bean.repository.ServerRepository;
-import co.bywarp.melon.bean.server.Server;
-import co.bywarp.melon.network.MicroArcadeSelector;
+import co.bywarp.melon.network.GameServerSelector;
+import co.bywarp.melon.network.selector.SelectorGameType;
 import co.bywarp.melon.npc.Npc;
 import co.bywarp.melon.player.Client;
 import co.bywarp.melon.plugin.MelonPlugin;
@@ -22,23 +22,21 @@ import co.bywarp.melon.util.world.Hologram;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Skeleton;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
-import java.util.ArrayList;
-
-public class MicroArcadeNPC extends Npc<Skeleton> {
+public class NpcCannons extends Npc {
 
     private MelonPlugin plugin;
-    private ServerRepository repository;
     private BukkitTask updater;
 
-    public MicroArcadeNPC(MelonPlugin plugin, ServerRepository repository) {
+    public NpcCannons(MelonPlugin plugin, ServerRepository repository) {
         super(
-                new Location(Bukkit.getWorld("Hub"), -8.5, 60.5, -74.5, 155f, 3.5f),
-                Skeleton.class,
-                "&2&lMicro Arcade",
+                new Location(Bukkit.getWorld("Hub"), -8.5, 60.5, -86.5, 115f, 3.5f),
+                EntityType.SKELETON,
+                "&2&lCannons",
                 " ",
                 "&e0 &fcurrently playing",
                 "&e0 &fgame servers",
@@ -47,13 +45,12 @@ public class MicroArcadeNPC extends Npc<Skeleton> {
         );
 
         this.plugin = plugin;
-        this.repository = repository;
         this.updater = new BukkitRunnable() {
             @Override
             public void run() {
                 Hologram hologram = getHologram();
-                int players = getPlayers();
-                int servers = repository.getAllMicroArcadeServers().size();
+                int players = repository.getPlayers("Cannons");
+                int servers = repository.getServers("Cannons").size();
 
                 hologram.update(2, "&e" + players + " &fcurrently playing");
                 hologram.update(3, "&e" + servers + " &fgame server" + TimeUtil.numberEnding(servers));
@@ -67,7 +64,7 @@ public class MicroArcadeNPC extends Npc<Skeleton> {
 
         Skeleton skeleton = (Skeleton) getEntity();
         skeleton.getEquipment().setItemInHand(
-                new ItemBuilder(Material.PRISMARINE_CRYSTALS)
+                new ItemBuilder(Material.TNT)
                         .toItemStack()
         );
     }
@@ -83,17 +80,7 @@ public class MicroArcadeNPC extends Npc<Skeleton> {
 
     @Override
     public void interact(Client client) {
-        MicroArcadeSelector.serve(plugin, client);
-    }
-
-    private int getPlayers() {
-        ArrayList<Server> all = repository.getAllMicroArcadeServers();
-        int i = 0;
-        for (Server server : all) {
-            i += server.getPlayers();
-        }
-
-        return i;
+        GameServerSelector.serve(plugin, client, SelectorGameType.CANNONS);
     }
 
 }

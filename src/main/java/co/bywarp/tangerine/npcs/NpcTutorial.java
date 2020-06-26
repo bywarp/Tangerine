@@ -14,14 +14,14 @@ import co.bywarp.melon.player.Client;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.entity.Witch;
+import org.bukkit.entity.EntityType;
 
-public class TutorialNPC extends Npc<Witch> {
+public class NpcTutorial extends Npc {
 
-    public TutorialNPC() {
+    public NpcTutorial() {
         super(
                 new Location(Bukkit.getWorld("Hub"), -15.5, 59.5, -87.5, 45f, 3.5f),
-                Witch.class,
+                EntityType.WITCH,
                 "&2&lTutorials",
                 " ",
                 "&aTutorials &fare coming soon,",

@@ -19,11 +19,12 @@ import co.m1ke.basic.utils.RandomUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Skeleton;
 
 import java.util.ArrayList;
 
-public class MelonClubOwnerNPC extends Npc<Skeleton> {
+public class NpcMelonClubOwner extends Npc {
 
     private ArrayList<String> phrases = new ArrayList<String>() {
         {
@@ -37,10 +38,10 @@ public class MelonClubOwnerNPC extends Npc<Skeleton> {
         }
     };
 
-    public MelonClubOwnerNPC() {
+    public NpcMelonClubOwner() {
         super(
                 new Location(Bukkit.getWorld("Hub"), -54.5, 57.5, -34.5),
-                Skeleton.class,
+                EntityType.SKELETON,
                 "&2&lMelon Club Owner"
         );
     }

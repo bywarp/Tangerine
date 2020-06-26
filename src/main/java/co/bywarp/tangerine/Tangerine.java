@@ -20,6 +20,7 @@ import co.bywarp.melon.module.modules.treasure.PlayerTreasureModule;
 import co.bywarp.melon.module.modules.treasure.TreasureChestModule;
 import co.bywarp.melon.network.NetworkPlayerCount;
 import co.bywarp.melon.npc.NpcManager;
+import co.bywarp.melon.npc.global.NpcDailyReward;
 import co.bywarp.melon.player.treasure.chest.TreasureChest;
 import co.bywarp.melon.plugin.MelonPlugin;
 import co.bywarp.tangerine.commands.EditCommand;
@@ -35,15 +36,14 @@ import co.bywarp.tangerine.modules.player.PlayerPostJoinModule;
 import co.bywarp.tangerine.modules.player.PlayerStackerModule;
 import co.bywarp.tangerine.modules.player.PlayerStateModule;
 import co.bywarp.tangerine.modules.player.punch.PlayerPunchModule;
-import co.bywarp.tangerine.npcs.BigSteveNPC;
-import co.bywarp.tangerine.npcs.DailyRewardNPC;
-import co.bywarp.tangerine.npcs.EventNPC;
-import co.bywarp.tangerine.npcs.MelonClubOwnerNPC;
-import co.bywarp.tangerine.npcs.TutorialNPC;
-import co.bywarp.tangerine.npcs.games.BingoNPC;
-import co.bywarp.tangerine.npcs.games.CannonsNPC;
-import co.bywarp.tangerine.npcs.games.DeathmatchNPC;
-import co.bywarp.tangerine.npcs.games.MicroArcadeNPC;
+import co.bywarp.tangerine.modules.rotator.CosmeticRotatorModule;
+import co.bywarp.tangerine.npcs.NpcEvent;
+import co.bywarp.tangerine.npcs.NpcMelonClubOwner;
+import co.bywarp.tangerine.npcs.NpcTutorial;
+import co.bywarp.tangerine.npcs.games.NpcBingo;
+import co.bywarp.tangerine.npcs.games.NpcCannons;
+import co.bywarp.tangerine.npcs.games.NpcDeathmatch;
+import co.bywarp.tangerine.npcs.games.NpcMicroArcade;
 import co.bywarp.tangerine.recharge.RechargeManager;
 import co.bywarp.tangerine.scoreboard.HubScoreboardManager;
 
@@ -96,15 +96,14 @@ public class Tangerine extends MelonPlugin {
         ServerRepository serverRepository = this.getBeans().getServerRepository();
         NpcManager npc = this.getNpcManager();
 
-        npc.registerNPC(new DailyRewardNPC(this));
-        npc.registerNPC(new EventNPC(this));
-        npc.registerNPC(new BingoNPC(this, serverRepository));
-        npc.registerNPC(new DeathmatchNPC(this, serverRepository));
-        npc.registerNPC(new CannonsNPC(this, serverRepository));
-        npc.registerNPC(new MicroArcadeNPC(this, serverRepository));
-        npc.registerNPC(new TutorialNPC());
-        npc.registerNPC(new BigSteveNPC(this));
-        npc.registerNPC(new MelonClubOwnerNPC());
+        npc.registerNPC(new NpcDailyReward(this, new Location(Bukkit.getWorld("Hub"), -6.5, 59.75, -80.5, 90f, 3.5f)));
+        npc.registerNPC(new NpcEvent(this));
+        npc.registerNPC(new NpcBingo(this, serverRepository));
+        npc.registerNPC(new NpcDeathmatch(this, serverRepository));
+        npc.registerNPC(new NpcCannons(this, serverRepository));
+        npc.registerNPC(new NpcMicroArcade(this, serverRepository));
+        npc.registerNPC(new NpcTutorial());
+        npc.registerNPC(new NpcMelonClubOwner());
 
         ModuleManager modules = this.getModuleManager();
 
@@ -115,12 +114,13 @@ public class Tangerine extends MelonPlugin {
         PlayerTreasureModule<Tangerine> treasureModule = new PlayerTreasureModule<>(this, Tangerine::isLootDisabled);
 
         modules.load(new AntiWeatherModule());
+        modules.load(new CosmeticRotatorModule());
         modules.load(editModule = new PlayerEditModule());
         modules.load(new PlayerHotbarModule(this.getClientManager(), editModule));
         modules.load(treasureModule);
         modules.load(flyModule = new PlayerFlyModule());
         modules.load(new PlayerJumpModule(flyModule));
-        modules.load(new PlayerPostJoinModule());
+        modules.load(new PlayerPostJoinModule(editModule));
         modules.load(new PlayerStackerModule(this.getClientManager()));
         modules.load(new PlayerStateModule());
         modules.load(new PlayerPunchModule(rechargeManager));
@@ -133,10 +133,10 @@ public class Tangerine extends MelonPlugin {
         TreasureChestModule treasureChestModule = new TreasureChestModule(chest);
         modules.load(treasureChestModule);
 
-        CommandHandler command = this.getCommandHandler();
-        command.registerCommand("edit", new String[] { "build" }, new EditCommand(editModule));
-        command.registerCommand("radius", new RadiusCommand(forcefieldModule));
-        command.registerCommand("toggleloot", new ToggleLootCommand(this));
+        CommandHandler commandHandler = this.getCommandHandler();
+        commandHandler.registerCommand("edit", new String[] { "build" }, new EditCommand(editModule, getClientManager()));
+        commandHandler.registerCommand("radius", new RadiusCommand(forcefieldModule));
+        commandHandler.registerCommand("toggleloot", new ToggleLootCommand(this));
 
         this.setScoreboardManager(new HubScoreboardManager(this));
 

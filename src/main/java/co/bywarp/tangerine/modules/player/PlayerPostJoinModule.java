@@ -13,9 +13,11 @@ import co.bywarp.melon.module.Module;
 import co.bywarp.melon.parcel.prefs.ServerPreferences;
 import co.bywarp.melon.player.Client;
 import co.bywarp.melon.player.ClientManager;
+import co.bywarp.melon.player.Rank;
 import co.bywarp.melon.util.text.Lang;
 import co.bywarp.tangerine.Tangerine;
 
+import org.bukkit.GameMode;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -24,9 +26,11 @@ public class PlayerPostJoinModule extends Module {
 
     private ClientManager clientManager;
     private ServerPreferences preferences;
+    private PlayerEditModule editModule;
 
-    public PlayerPostJoinModule() {
+    public PlayerPostJoinModule(PlayerEditModule editModule) {
         super("Post Player Join");
+        this.editModule = editModule;
     }
 
     @Override
@@ -46,6 +50,11 @@ public class PlayerPostJoinModule extends Module {
         Client client = clientManager.getPlayer(event.getPlayer());
         client.teleport(Tangerine.getGlobalSpawn());
 
+        client.getPlayer().setGameMode(GameMode.ADVENTURE);
+        if (editModule.isEditor(client.getPlayer())) {
+            client.getPlayer().setGameMode(GameMode.CREATIVE);
+        }
+
         if (client.getStatisticsManager().get("prefs.donor.hubFlight").asBoolean()) {
             client.getPlayer().setAllowFlight(true);
             client.getPlayer().setFlying(true);
@@ -63,6 +72,11 @@ public class PlayerPostJoinModule extends Module {
         client.sendCenteredMessage("&aShop &f" + preferences.getServerStoreUrl());
         client.sendMessage(" ");
         client.sendCenteredMessage(Lang.DIVIDER);
+
+        if (Rank.has(client, Rank.DIRECTOR)) {
+            client.sendMessage(Lang.generate("Server", "You have been granted operator permissions."));
+            client.getPlayer().setOp(true);
+        }
     }
 
 }

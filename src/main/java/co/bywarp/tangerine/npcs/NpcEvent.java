@@ -13,21 +13,21 @@ import co.bywarp.melon.npc.Npc;
 import co.bywarp.melon.player.Client;
 import co.bywarp.melon.plugin.MelonPlugin;
 import co.bywarp.melon.util.item.ItemBuilder;
-import co.bywarp.melon.util.text.Lang;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Skeleton;
 
-public class EventNPC extends Npc<Skeleton> {
+public class NpcEvent extends Npc {
 
     private MelonPlugin plugin;
 
-    public EventNPC(MelonPlugin plugin) {
+    public NpcEvent(MelonPlugin plugin) {
         super(
                 new Location(Bukkit.getWorld("Hub"), -15.5, 59.5, -73.5, 130f, 3.5f),
-                Skeleton.class,
+                EntityType.SKELETON,
                 "&2&lEvents",
                 " ",
                 "&fThere is no current",

@@ -22,20 +22,21 @@ import co.bywarp.melon.util.world.Hologram;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Skeleton;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
-public class DeathmatchNPC extends Npc<Skeleton> {
+public class NpcBingo extends Npc {
 
     private MelonPlugin plugin;
     private BukkitTask updater;
 
-    public DeathmatchNPC(MelonPlugin plugin, ServerRepository repository) {
+    public NpcBingo(MelonPlugin plugin, ServerRepository repository) {
         super(
-                new Location(Bukkit.getWorld("Hub"), -16.5, 60.5, -66.5, 155f, 3.5f),
-                Skeleton.class,
-                "&2&lDeathmatch",
+                new Location(Bukkit.getWorld("Hub"), -16.5, 60.5, -94.5, 25f, 3.5f),
+                EntityType.SKELETON,
+                "&2&lBingo",
                 " ",
                 "&e0 &fcurrently playing",
                 "&e0 &fgame servers",
@@ -48,8 +49,8 @@ public class DeathmatchNPC extends Npc<Skeleton> {
             @Override
             public void run() {
                 Hologram hologram = getHologram();
-                int players = repository.getPlayers("Deathmatch");
-                int servers = repository.getServers("Deathmatch").size();
+                int players = repository.getPlayers("Bingo");
+                int servers = repository.getServers("Bingo").size();
 
                 hologram.update(2, "&e" + players + " &fcurrently playing");
                 hologram.update(3, "&e" + servers + " &fgame server" + TimeUtil.numberEnding(servers));
@@ -63,7 +64,7 @@ public class DeathmatchNPC extends Npc<Skeleton> {
 
         Skeleton skeleton = (Skeleton) getEntity();
         skeleton.getEquipment().setItemInHand(
-                new ItemBuilder(Material.BLAZE_POWDER)
+                new ItemBuilder(Material.MAP)
                         .toItemStack()
         );
     }
@@ -79,7 +80,6 @@ public class DeathmatchNPC extends Npc<Skeleton> {
 
     @Override
     public void interact(Client client) {
-        GameServerSelector.serve(plugin, client, SelectorGameType.DEATHMATCH);
+        GameServerSelector.serve(plugin, client, SelectorGameType.BINGO);
     }
-
 }
