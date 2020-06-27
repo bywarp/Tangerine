@@ -23,12 +23,16 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.ArmorStand;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
 
-public class CosmeticRotatorObject implements Closable {
+public class CosmeticRotatorObject implements Listener, Closable {
 
     private final ItemBuilder BASE = new ItemBuilder(Material.OBSIDIAN);
 
@@ -74,6 +78,7 @@ public class CosmeticRotatorObject implements Closable {
         this.items = new ArrayList<>(itemManager.getItems());
 
         rotate();
+        plugin.registerEvents(this);
 
         this.rotator = new BukkitRunnable() {
 
@@ -117,8 +122,21 @@ public class CosmeticRotatorObject implements Closable {
         return RandomUtils.random(0, items.size() - 1);
     }
 
+    @EventHandler
+    public void onManipulate(PlayerArmorStandManipulateEvent event) {
+        if (event.getRightClicked() != display
+                && event.getRightClicked() != top
+                && event.getRightClicked() != bottom) {
+            return;
+        }
+
+        event.setCancelled(true);
+    }
+
     @Override
     public void close() {
+        HandlerList.unregisterAll(this);
+
         this.rotator.cancel();
         this.switcher.cancel();
 
