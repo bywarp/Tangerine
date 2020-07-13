@@ -39,7 +39,6 @@ import co.bywarp.tangerine.modules.player.punch.PlayerPunchModule;
 import co.bywarp.tangerine.modules.rotator.CosmeticRotatorModule;
 import co.bywarp.tangerine.npcs.NpcEvent;
 import co.bywarp.tangerine.npcs.NpcMelonClubOwner;
-import co.bywarp.tangerine.npcs.NpcTutorial;
 import co.bywarp.tangerine.npcs.games.NpcBingo;
 import co.bywarp.tangerine.npcs.games.NpcCannons;
 import co.bywarp.tangerine.npcs.games.NpcDeathmatch;
@@ -102,7 +101,6 @@ public class Tangerine extends MelonPlugin {
         npc.registerNPC(new NpcDeathmatch(this, serverRepository));
         npc.registerNPC(new NpcCannons(this, serverRepository));
         npc.registerNPC(new NpcMicroArcade(this, serverRepository));
-        npc.registerNPC(new NpcTutorial());
         npc.registerNPC(new NpcMelonClubOwner());
 
         ModuleManager modules = this.getModuleManager();

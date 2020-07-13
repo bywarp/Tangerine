@@ -11,11 +11,14 @@ package co.bywarp.tangerine.npcs.games;
 
 import co.bywarp.melon.bean.repository.ServerRepository;
 import co.bywarp.melon.network.GameServerSelector;
+import co.bywarp.melon.network.ServerSelector;
 import co.bywarp.melon.network.selector.SelectorGameType;
+import co.bywarp.melon.network.selector.SelectorServerType;
 import co.bywarp.melon.npc.Npc;
 import co.bywarp.melon.player.Client;
 import co.bywarp.melon.plugin.MelonPlugin;
 import co.bywarp.melon.util.TimeUtil;
+import co.bywarp.melon.util.inventory.handlers.SelectionInventory;
 import co.bywarp.melon.util.item.ItemBuilder;
 import co.bywarp.melon.util.world.Hologram;
 
@@ -27,10 +30,17 @@ import org.bukkit.entity.Skeleton;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.text.NumberFormat;
+import java.util.Locale;
+
 public class NpcDeathmatch extends Npc {
 
     private MelonPlugin plugin;
     private BukkitTask updater;
+    private ServerRepository repository;
+    private NumberFormat nf;
+
+    private final SelectorServerType TYPE = SelectorServerType.DEATHMATCH;
 
     public NpcDeathmatch(MelonPlugin plugin, ServerRepository repository) {
         super(
@@ -45,12 +55,19 @@ public class NpcDeathmatch extends Npc {
         );
 
         this.plugin = plugin;
+        this.repository = repository;
+        this.nf = NumberFormat.getInstance(Locale.US);
         this.updater = new BukkitRunnable() {
             @Override
             public void run() {
                 Hologram hologram = getHologram();
-                int players = repository.getPlayers("Deathmatch");
-                int servers = repository.getServers("Deathmatch").size();
+                int players = repository.getPlayers(TYPE.getName());
+                int servers = repository.getAmountOfServers(TYPE.getName());
+
+                for (SelectorGameType variant : TYPE.getVariants()) {
+                    players += repository.getPlayers(variant.getNameLong());
+                    servers += repository.getAmountOfServers(variant.getNameLong());
+                }
 
                 hologram.update(2, "&e" + players + " &fcurrently playing");
                 hologram.update(3, "&e" + servers + " &fgame server" + TimeUtil.numberEnding(servers));
@@ -80,7 +97,22 @@ public class NpcDeathmatch extends Npc {
 
     @Override
     public void interact(Client client) {
-        GameServerSelector.serve(plugin, client, SelectorGameType.DEATHMATCH);
+        new SelectionInventory<>(plugin, client,
+                handler -> GameServerSelector.serve(plugin, client, handler.getResponse()),
+                gameType -> {
+                    int players = repository.getPlayers(gameType.getNameLong());
+                    int servers = repository.getAmountOfServers(gameType.getNameLong());
+                    return gameType
+                            .getItem()
+                            .clone()
+                            .setName("&2&l" + gameType.getNameLong())
+                            .setLore("&e" + nf.format(players) + " &fcurrently playing\n" +
+                                    "&e" + nf.format(servers) + " &fserver" + TimeUtil.numberEnding(servers) + "\n\n" +
+                                    "&aClick to view " + gameType.getNameLong() + " servers");
+                },
+                () -> ServerSelector.serve(plugin, client),
+                "Select a Variant",
+                TYPE.getVariants().toArray(new SelectorGameType[0]));
     }
 
 }
