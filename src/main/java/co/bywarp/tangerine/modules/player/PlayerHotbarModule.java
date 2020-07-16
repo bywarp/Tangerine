@@ -15,6 +15,7 @@ import co.bywarp.melon.network.ServerSelector;
 import co.bywarp.melon.player.Client;
 import co.bywarp.melon.player.ClientManager;
 import co.bywarp.melon.player.inspection.ProfileInspection;
+import co.bywarp.melon.player.inspection.friend.FriendInspection;
 import co.bywarp.melon.player.inspection.treasure.TreasureInspection;
 import co.bywarp.melon.util.item.ItemBuilder;
 
@@ -129,13 +130,17 @@ public class PlayerHotbarModule extends Module {
             return;
         }
 
+        if (item.isSimilar(FRIENDS)) {
+            FriendInspection.serve(getPlugin(), client);
+            return;
+        }
+
         if (item.getType() == Material.SKULL_ITEM) {
             SkullMeta meta = (SkullMeta) event.getItem().getItemMeta();
             if (meta.getOwner().equalsIgnoreCase(client.getName())) {
                 ProfileInspection profileInspection = new ProfileInspection(client, getPlugin());
                 profileInspection.open();
             }
-            return;
         }
     }
 
