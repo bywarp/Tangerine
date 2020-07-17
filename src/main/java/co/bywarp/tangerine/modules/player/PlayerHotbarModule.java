@@ -10,6 +10,8 @@
 package co.bywarp.tangerine.modules.player;
 
 import co.bywarp.melon.module.Module;
+import co.bywarp.melon.module.modules.defaults.staff.mfa.StaffMfaModule;
+import co.bywarp.melon.module.modules.defaults.staff.mfa.StaffMfaUser;
 import co.bywarp.melon.network.LobbyServerSelector;
 import co.bywarp.melon.network.ServerSelector;
 import co.bywarp.melon.player.Client;
@@ -18,6 +20,7 @@ import co.bywarp.melon.player.inspection.ProfileInspection;
 import co.bywarp.melon.player.inspection.friend.FriendInspection;
 import co.bywarp.melon.player.inspection.treasure.TreasureInspection;
 import co.bywarp.melon.util.item.ItemBuilder;
+import co.bywarp.melon.util.text.Lang;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -38,6 +41,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 public class PlayerHotbarModule extends Module {
 
     private ClientManager clientManager;
+    private StaffMfaModule mfaModule;
     private PlayerEditModule editor;
 
     public PlayerHotbarModule(ClientManager clientManager, PlayerEditModule editor) {
@@ -49,6 +53,7 @@ public class PlayerHotbarModule extends Module {
     @Override
     public void start() {
         this.registerListeners();
+        this.mfaModule = (StaffMfaModule) getPlugin().getModuleManager().getModule(StaffMfaModule.class);
     }
 
     @Override
@@ -113,6 +118,12 @@ public class PlayerHotbarModule extends Module {
         }
 
         event.setCancelled(true);
+
+        StaffMfaUser user = mfaModule.of(client);
+        if (user != null && (user.isSetup() && !user.isAuthenticated())) {
+            client.sendMessage(Lang.generate("MFA", "You must verify your identity before doing this."));
+            return;
+        }
 
         ItemStack item = event.getItem();
         if (item.isSimilar(SERVER_SELECTOR)) {

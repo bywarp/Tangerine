@@ -10,9 +10,13 @@
 package co.bywarp.tangerine.modules.player;
 
 import co.bywarp.melon.module.Module;
+import co.bywarp.melon.module.ModuleManager;
+import co.bywarp.melon.module.modules.defaults.staff.mfa.StaffMfaModule;
+import co.bywarp.melon.module.modules.defaults.staff.mfa.StaffMfaUser;
 import co.bywarp.melon.player.Client;
 import co.bywarp.melon.player.ClientManager;
 import co.bywarp.melon.player.Rank;
+import co.bywarp.melon.util.text.Lang;
 import co.bywarp.melon.util.world.Cuboid;
 import co.bywarp.tangerine.Tangerine;
 import co.bywarp.tangerine.modules.player.punch.PlayerPunchEvent;
@@ -26,12 +30,14 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 public class PlayerStateModule extends Module {
 
     private Cuboid region;
     private ClientManager clientManager;
+    private StaffMfaModule mfaModule;
     private final World HUB_WORLD = Bukkit.getWorld("Hub");
 
     public PlayerStateModule() {
@@ -46,6 +52,9 @@ public class PlayerStateModule extends Module {
     public void start() {
         this.registerListeners();
         this.clientManager = getPlugin().getClientManager();
+
+        ModuleManager manager = getPlugin().getModuleManager();
+        this.mfaModule = (StaffMfaModule) manager.getModule(StaffMfaModule.class);
     }
 
     @Override
@@ -78,6 +87,29 @@ public class PlayerStateModule extends Module {
         }
 
         Bukkit.getPluginManager().callEvent(new PlayerPunchEvent(hit, hitter));
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onCommand(PlayerCommandPreprocessEvent event) {
+        if (event.getMessage().startsWith("/auth")) {
+           return;
+        }
+
+        if (mfaModule == null) {
+            return;
+        }
+
+        Client client = clientManager.getPlayer(event.getPlayer());
+        if (client == null) {
+            return;
+        }
+
+        StaffMfaUser user = mfaModule.of(client);
+        if (user.isSetup() && !user.isAuthenticated()) {
+            client.sendMessage(Lang.generate("MFA", "You must verify your identity before performing commands."));
+            event.setCancelled(true);
+            return;
+        }
     }
 
     @EventHandler

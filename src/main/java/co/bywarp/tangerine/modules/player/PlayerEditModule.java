@@ -10,7 +10,11 @@
 package co.bywarp.tangerine.modules.player;
 
 import co.bywarp.melon.module.Module;
+import co.bywarp.melon.module.modules.defaults.staff.mfa.StaffMfaModule;
+import co.bywarp.melon.module.modules.defaults.staff.mfa.StaffMfaUser;
 import co.bywarp.melon.player.Client;
+import co.bywarp.melon.player.ClientManager;
+import co.bywarp.melon.util.text.Lang;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -27,6 +31,7 @@ import lombok.Getter;
 public class PlayerEditModule extends Module {
 
     private ArrayList<UUID> editors;
+    private StaffMfaModule mfaModule;
 
     public PlayerEditModule() {
         super("Player Edit");
@@ -36,6 +41,7 @@ public class PlayerEditModule extends Module {
     @Override
     public void start() {
         this.registerListeners();
+        this.mfaModule = (StaffMfaModule) getPlugin().getModuleManager().getModule(StaffMfaModule.class);
     }
 
     @Override
@@ -45,7 +51,21 @@ public class PlayerEditModule extends Module {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onBuild(BlockPlaceEvent event) {
-        if (editors.contains(event.getPlayer().getUniqueId())) {
+        Client client = ClientManager.getPlayer(event.getPlayer().getUniqueId());
+        if (client == null) {
+            event.setCancelled(true);
+            return;
+        }
+
+        boolean editor = editors.contains(client.getId());
+        StaffMfaUser user = mfaModule.of(client);
+        if ((user.isSetup() && !user.isAuthenticated()) && editor) {
+            client.sendMessage(Lang.generate("MFA", "You must verify your identity before exacting editor privileges."));
+            event.setCancelled(true);
+            return;
+        }
+
+        if (editor) {
             return;
         }
 
@@ -54,7 +74,21 @@ public class PlayerEditModule extends Module {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onBreak(BlockBreakEvent event) {
-        if (editors.contains(event.getPlayer().getUniqueId())) {
+        Client client = ClientManager.getPlayer(event.getPlayer().getUniqueId());
+        if (client == null) {
+            event.setCancelled(true);
+            return;
+        }
+
+        boolean editor = editors.contains(client.getId());
+        StaffMfaUser user = mfaModule.of(client);
+        if ((user.isSetup() && !user.isAuthenticated()) && editor) {
+            client.sendMessage(Lang.generate("MFA", "You must verify your identity before exacting editor privileges."));
+            event.setCancelled(true);
+            return;
+        }
+
+        if (editor) {
             return;
         }
 
