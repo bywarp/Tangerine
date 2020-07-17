@@ -9,14 +9,15 @@
 
 package co.bywarp.tangerine.scoreboard;
 
+import co.bywarp.melon.module.modules.defaults.staff.mfa.StaffMfaModule;
+import co.bywarp.melon.module.modules.defaults.staff.mfa.StaffMfaUser;
 import co.bywarp.melon.player.Client;
 import co.bywarp.melon.player.scoreboard.ScoreboardTheme;
 import co.bywarp.melon.player.scoreboard.manager.ScoreboardManager;
 import co.bywarp.melon.plugin.MelonPlugin;
 import co.bywarp.melon.util.text.SimpleScoreboard;
 import co.bywarp.tangerine.Tangerine;
-import co.bywarp.tangerine.scoreboard.boards.PartyBoard;
-import co.bywarp.tangerine.scoreboard.boards.StaffBoard;
+import co.bywarp.tangerine.scoreboard.boards.MfaBoard;
 import co.bywarp.tangerine.scoreboard.boards.StandardBoard;
 
 import org.bukkit.Bukkit;
@@ -40,7 +41,7 @@ public class HubScoreboardManager extends ScoreboardManager implements Listener 
 
     @Override
     public void defaultBoard(ScoreboardTheme theme, SimpleScoreboard wrapper) {
-        HubScoreboard board = getBoard(client);
+        HubScoreboard board = getBoard(super.getClient());
         if (board == null) {
             return;
         }
@@ -64,15 +65,14 @@ public class HubScoreboardManager extends ScoreboardManager implements Listener 
     }
 
     public HubScoreboard getBoard(Client client) {
+        MelonPlugin plugin = client.getPlugin();
+        StaffMfaModule mfaModule = (StaffMfaModule) plugin.getModuleManager().getModule(StaffMfaModule.class);
+        StaffMfaUser user = mfaModule.of(client);
+        if (user.isSetup() && !user.isAuthenticated()) {
+            return new MfaBoard();
+        }
+
         return new StandardBoard();
-//        if (client.getParty() != null) {
-//        }
-//
-//        if (client.getStatisticsManager().has("Staff", "Utilities")) {
-//            return new StaffBoard();
-//        }
-//
-//        return new StandardBoard();
     }
 
 }
