@@ -24,6 +24,7 @@ tasks.withType(JavaCompile) {
 configurations {
     extraLibs
 }
+
 configurations.all {
     resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
 }
@@ -46,7 +47,6 @@ repositories {
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
 
     maven {
-        name "GitHubPackages"
         url "https://maven.pkg.github.com/bywarp/Melon"
         credentials {
             username = GITHUB_USER
@@ -57,9 +57,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly group: 'co.bywarp', name: 'Melon', version: '0.1-043d061', changing: true
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-
+    compileOnly group: 'co.bywarp', name: 'Melon', version: '0.1-b689882', changing: true
     compileOnly group: 'org.spigotmc', name: 'spigot', version: '1.8.8-R0.1-SNAPSHOT'
 
     compile group: 'org.projectlombok', name: 'lombok', version: '1.18.10'
@@ -69,6 +67,8 @@ dependencies {
 }
 
 shadowJar {
+    minimize()
+
     destinationDir = file(melonExportTarget)
 
     exclude "META-INF/*.SF"

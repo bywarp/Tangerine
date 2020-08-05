@@ -10,6 +10,7 @@
 package co.bywarp.tangerine.npcs.games;
 
 import co.bywarp.melon.bean.repository.ServerRepository;
+import co.bywarp.melon.bean.server.Server;
 import co.bywarp.melon.network.GameServerSelector;
 import co.bywarp.melon.network.ServerSelector;
 import co.bywarp.melon.network.selector.SelectorGameType;
@@ -31,7 +32,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 public class NpcDeathmatch extends Npc {
 
@@ -61,13 +64,13 @@ public class NpcDeathmatch extends Npc {
             @Override
             public void run() {
                 Hologram hologram = getHologram();
-                int players = repository.getPlayers(TYPE.getName());
-                int servers = repository.getAmountOfServers(TYPE.getName());
+                ArrayList<Server> all = getAllVariants();
 
-                for (SelectorGameType variant : TYPE.getVariants()) {
-                    players += repository.getPlayers(variant.getNameLong());
-                    servers += repository.getAmountOfServers(variant.getNameLong());
-                }
+                int players = all
+                        .stream()
+                        .mapToInt(Server::getPlayers)
+                        .sum();
+                int servers = all.size();
 
                 hologram.update(2, "&e" + players + " &fcurrently playing");
                 hologram.update(3, "&e" + servers + " &fgame server" + TimeUtil.numberEnding(servers));
@@ -113,6 +116,22 @@ public class NpcDeathmatch extends Npc {
                 () -> ServerSelector.serve(plugin, client),
                 "Select a Variant",
                 TYPE.getVariants().toArray(new SelectorGameType[0]));
+    }
+
+    private ArrayList<Server> getAllVariants() {
+        ArrayList<Server> ret = new ArrayList<>();
+        TYPE
+                .getVariants()
+                .forEach(variant -> {
+                    ArrayList<Server> targets = repository.getServers(variant.getName())
+                            .stream()
+                            .filter(server -> !server.getName().startsWith("MICRO")
+                                    && !server.getName().startsWith("MIX"))
+                            .collect(Collectors.toCollection(ArrayList::new));
+                    ret.addAll(targets);
+                });
+
+        return ret;
     }
 
 }

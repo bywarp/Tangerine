@@ -75,7 +75,7 @@ public class PlayerPunchModule extends Module {
             return;
         }
 
-        if (hit.getStatisticsManager().get("prefs.dev.ignorePunch").asBoolean()
+        if (hit.getStatisticsManager().get("prefs.admin.ignorePunch").asBoolean()
                 || hit.getPlayer().getGameMode() == GameMode.SPECTATOR
                 || hit.getPlayer().getGameMode() == GameMode.CREATIVE) {
             hitter.sendMessage(Lang.generate("Punch", "You can't punch " + hit.getRank().getCompatPrefix() + " &a" + hit.getName() + "&7."));

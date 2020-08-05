@@ -16,6 +16,7 @@ import co.bywarp.melon.module.modules.defaults.staff.mfa.StaffMfaUser;
 import co.bywarp.melon.player.Client;
 import co.bywarp.melon.player.ClientManager;
 import co.bywarp.melon.player.Rank;
+import co.bywarp.melon.plugin.MelonPlugin;
 import co.bywarp.melon.util.text.Lang;
 import co.bywarp.melon.util.world.Cuboid;
 import co.bywarp.tangerine.Tangerine;
@@ -27,6 +28,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.entity.EntityCombustEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
@@ -50,11 +52,13 @@ public class PlayerStateModule extends Module {
 
     @Override
     public void start() {
-        this.registerListeners();
-        this.clientManager = getPlugin().getClientManager();
+        MelonPlugin plugin = getPlugin();
+        ModuleManager manager = plugin.getModuleManager();
 
-        ModuleManager manager = getPlugin().getModuleManager();
-        this.mfaModule = (StaffMfaModule) manager.getModule(StaffMfaModule.class);
+        this.clientManager = plugin.getClientManager();
+        this.mfaModule = manager.require(StaffMfaModule.class);
+
+        this.registerListeners();
     }
 
     @Override
@@ -115,6 +119,16 @@ public class PlayerStateModule extends Module {
     @EventHandler
     public void onFoodLevel(FoodLevelChangeEvent event) {
         event.setFoodLevel(20);
+    }
+
+    @EventHandler
+    public void onCombust(EntityCombustEvent event) {
+        if (!(event.getEntity() instanceof Player)) {
+            return;
+        }
+
+        event.setDuration(0);
+        event.setCancelled(true);
     }
 
     @EventHandler

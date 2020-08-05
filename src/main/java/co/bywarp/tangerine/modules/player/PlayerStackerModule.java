@@ -54,7 +54,7 @@ public class PlayerStackerModule extends Module {
             }
 
             if (!isEnabled(clickedClient)) {
-                clicker.sendMessage(Lang.generate("Stacker", clickedClient.getRank().getCompatPrefix() + " &a" + clickedClient.getName() + " &7doesn't have stacker enabled."));
+                clicker.sendMessage(Lang.generate("Stacker", "&f" + clickedClient.getName() + " &7doesn't have stacker enabled."));
                 return;
             }
 
@@ -78,11 +78,12 @@ public class PlayerStackerModule extends Module {
 
     @EventHandler
     public void onUnstack(PlayerInteractEvent event) {
-        if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.PHYSICAL) {
+        if (event.getAction() == Action.LEFT_CLICK_AIR) {
             Client client = clientManager.getPlayer(event.getPlayer());
             if (client.getPlayer().getPassenger() != null) {
                 Entity toThrow = client.getPlayer().getPassenger();
                 Vector vec = client.getPlayer().getLocation().getDirection().clone().multiply(2).setY(2);
+
                 if (toThrow.getPassenger() == null) {
                     toThrow.leaveVehicle();
                     toThrow.setVelocity(vec);

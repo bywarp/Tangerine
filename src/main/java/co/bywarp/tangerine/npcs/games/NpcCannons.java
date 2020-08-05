@@ -10,6 +10,7 @@
 package co.bywarp.tangerine.npcs.games;
 
 import co.bywarp.melon.bean.repository.ServerRepository;
+import co.bywarp.melon.bean.server.Server;
 import co.bywarp.melon.network.GameServerSelector;
 import co.bywarp.melon.network.selector.SelectorGameType;
 import co.bywarp.melon.npc.Npc;
@@ -26,6 +27,9 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Skeleton;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+
+import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class NpcCannons extends Npc {
 
@@ -49,8 +53,17 @@ public class NpcCannons extends Npc {
             @Override
             public void run() {
                 Hologram hologram = getHologram();
-                int players = repository.getPlayers("Cannons");
-                int servers = repository.getServers("Cannons").size();
+                ArrayList<Server> all = repository.getServers("Cannons")
+                        .stream()
+                        .filter(server -> !server.getName().startsWith("MICRO")
+                                && !server.getName().startsWith("MIX"))
+                        .collect(Collectors.toCollection(ArrayList::new));
+
+                int players = all
+                        .stream()
+                        .mapToInt(Server::getPlayers)
+                        .sum();
+                int servers = all.size();
 
                 hologram.update(2, "&e" + players + " &fcurrently playing");
                 hologram.update(3, "&e" + servers + " &fgame server" + TimeUtil.numberEnding(servers));

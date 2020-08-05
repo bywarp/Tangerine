@@ -53,8 +53,13 @@ public class NpcMicroArcade extends Npc {
             @Override
             public void run() {
                 Hologram hologram = getHologram();
-                int players = getPlayers();
-                int servers = repository.getAllMicroArcadeServers().size();
+                ArrayList<Server> all = repository.getAllMicroArcadeServers();
+
+                int players = all
+                        .stream()
+                        .mapToInt(Server::getPlayers)
+                        .sum();
+                int servers = all.size();
 
                 hologram.update(2, "&e" + players + " &fcurrently playing");
                 hologram.update(3, "&e" + servers + " &fgame server" + TimeUtil.numberEnding(servers));
@@ -85,16 +90,6 @@ public class NpcMicroArcade extends Npc {
     @Override
     public void interact(Client client) {
         MicroArcadeSelector.serve(plugin, client);
-    }
-
-    private int getPlayers() {
-        ArrayList<Server> all = repository.getAllMicroArcadeServers();
-        int i = 0;
-        for (Server server : all) {
-            i += server.getPlayers();
-        }
-
-        return i;
     }
 
 }

@@ -9,12 +9,11 @@
 
 package co.bywarp.tangerine.npcs;
 
+import co.bywarp.lightkit.util.RandomUtils;
 import co.bywarp.melon.npc.Npc;
 import co.bywarp.melon.player.Client;
 import co.bywarp.melon.util.item.ItemBuilder;
 import co.bywarp.melon.util.text.Lang;
-
-import co.m1ke.basic.utils.RandomUtils;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -25,6 +24,54 @@ import org.bukkit.entity.Skeleton;
 import java.util.ArrayList;
 
 public class NpcMelonClubOwner extends Npc {
+
+    // you were never here
+    private final String OOPS = "From here to the stars,\n" +
+            "With my candy bars,\n" +
+            "Rides a kid\n" +
+            "With a knack\n" +
+            "For inventions.\n" +
+            "\n" +
+            "A super-powered mind,\n" +
+            "A mechanical canine,\n" +
+            "He rescues the day\n" +
+            "From sure destruction.\n" +
+            "\n" +
+            "He's gotta save the world\n" +
+            "And get to school on time,\n" +
+            "So many things to do\n" +
+            "And not much timeSo off the ground,\n" +
+            "Up in the air,\n" +
+            "Out into the atmoshpere,\n" +
+            "\n" +
+            "Who can we count on?\n" +
+            "Jimmy Neutron!\n" +
+            "Who can we count on?\n" +
+            "Jimmy Neutron!\n" +
+            "Who can we count on?\n" +
+            "Jimmy Neutron!\n" +
+            "\n" +
+            "No matter where you are,\n" +
+            "You know he can't be far,\n" +
+            "Watching the world\n" +
+            "Through x-ray vision\n" +
+            "\n" +
+            "And whenever he's around,\n" +
+            "Where adventure can be found,\n" +
+            "You know that Jimmy Neutron's\n" +
+            "On a mission\n" +
+            "\n" +
+            "He's gotta save the world\n" +
+            "And get to school on time,\n" +
+            "So many things to do\n" +
+            "And not much time\n" +
+            "\n" +
+            "So off the ground,\n" +
+            "Up in the air,\n" +
+            "Out into the atmoshpere,\n" +
+            "\n" +
+            "Who can we count on?\n" +
+            "Jimmy Neutron!\n";
 
     private ArrayList<String> phrases = new ArrayList<String>() {
         {
@@ -58,8 +105,9 @@ public class NpcMelonClubOwner extends Npc {
 
     @Override
     public void interact(Client client) {
-        String random = phrases.get(RandomUtils.getRandomInt(0, phrases.size()));
+        String random = RandomUtils.random(phrases);
         if (random == null) {
+            client.sendMessage(Lang.colorMessage(OOPS));
             return;
         }
 

@@ -9,14 +9,13 @@
 
 package co.bywarp.tangerine.commands;
 
+import co.bywarp.lightkit.util.Ensure;
 import co.bywarp.melon.command.Command;
 import co.bywarp.melon.command.CommandReturn;
 import co.bywarp.melon.player.Client;
 import co.bywarp.melon.player.Rank;
 import co.bywarp.melon.util.text.Lang;
 import co.bywarp.tangerine.modules.player.ForcefieldModule;
-
-import co.m1ke.basic.utils.Comparables;
 
 public class RadiusCommand extends Command {
 
@@ -34,7 +33,7 @@ public class RadiusCommand extends Command {
             return CommandReturn.HELP_MENU;
         }
 
-        if (!Comparables.isNumeric(args[0])) {
+        if (!Ensure.isNumeric(args[0])) {
             client.sendMessage(Lang.generate("Forcefield", "Invalid Radius &f[" + args[0] + "]"));
             return CommandReturn.EXIT;
         }

@@ -9,15 +9,16 @@
 
 package co.bywarp.tangerine.recharge;
 
+import co.bywarp.lightkit.util.Closable;
 import co.bywarp.melon.player.Client;
 import co.bywarp.melon.player.ClientManager;
 import co.bywarp.melon.plugin.MelonPlugin;
+import co.bywarp.melon.util.TimeUtil;
 import co.bywarp.melon.util.player.PlayerUtils;
+import co.bywarp.melon.util.player.SoundUtil;
 import co.bywarp.melon.util.text.Lang;
 
-import co.m1ke.basic.utils.Closable;
-import co.m1ke.basic.utils.TimeUtil;
-
+import org.bukkit.Sound;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -66,6 +67,7 @@ public class RechargeManager implements Closable {
                             remove.add(client.getId());
                             String full = Lang.colorMessage("&fYou can now use &a" + ent.getKey());
                             PlayerUtils.sendActionBar(client, full);
+                            SoundUtil.play(client, Sound.NOTE_PLING, 10.0f, 0.6f);
                             client.sendMessage(Lang.generate("Recharge", "You can now use &f" + ent.getKey()) + "&7.");
                         }
                     }

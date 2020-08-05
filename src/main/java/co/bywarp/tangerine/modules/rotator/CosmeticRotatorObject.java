@@ -9,6 +9,7 @@
 
 package co.bywarp.tangerine.modules.rotator;
 
+import co.bywarp.lightkit.util.Closable;
 import co.bywarp.melon.player.treasure.item.TreasureItem;
 import co.bywarp.melon.player.treasure.item.TreasureItemManager;
 import co.bywarp.melon.player.treasure.item.TreasureItemType;
@@ -16,8 +17,6 @@ import co.bywarp.melon.plugin.MelonPlugin;
 import co.bywarp.melon.util.RandomUtils;
 import co.bywarp.melon.util.item.ItemBuilder;
 import co.bywarp.melon.util.world.Hologram;
-
-import co.m1ke.basic.utils.Closable;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
